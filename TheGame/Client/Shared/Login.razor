@@ -1,36 +1,28 @@
 ﻿@page "/login"
 
-<div>
-    <div class="p-4 text-center text-sm-left sticky-top">
-        <h4 class="d-inline">
-            Game
-        </h4>
-        <a href="register" class="d-inline float-right text-muted">Register</a>
-    </div>
+<div class="m-auto">
+    <div class="container">
+        <div class="row align-items-center justify-content-center" style="margin-top:15vh">
 
-    <div class="m-auto">
-        <div class="container">
-            <div class="row align-items-center justify-content-center" style="margin-top:15vh">
-
-                <EditForm Model="login">
-                    <DataAnnotationsValidator></DataAnnotationsValidator>
-                    <div style="width:350px">
-                        <div class="form-row">
-                            <span for="email" class="form-text pb-1">Email</span>
-                            <InputText id="email" class="form-control rounded-pill" @bind-Value="login.Email"></InputText>
-                            <ValidationMessage For="(() => login.Email)"></ValidationMessage>
-                        </div>
-
-                        <div class="form-row mt-2">
-                            <span for="password" class="form-text pb-1">Password</span>
-                            <InputText id="password" class="form-control rounded-pill" @bind-Value="login.Password"></InputText>
-                            <ValidationMessage For="(() => login.Password)"></ValidationMessage>
-                        </div>
+            <EditForm Model="login">
+                <DataAnnotationsValidator></DataAnnotationsValidator>
+                <div style="width:350px">
+                    <div class="form-row">
+                        <span for="email" class="form-text pb-1">Email</span>
+                        <InputText id="email" class="form-control rounded-pill" @bind-Value="login.Email"></InputText>
+                        <ValidationMessage For="(() => login.Email)"></ValidationMessage>
                     </div>
 
-                    <button type="submit" class="btn btn-primary rounded-pill mt-4 py-3 w-100">Login</button>
-                </EditForm>
-            </div>
+                    <div class="form-row mt-2">
+                        <span for="password" class="form-text pb-1">Password</span>
+                        <InputText id="password" class="form-control rounded-pill" type="password" @bind-Value="login.Password"></InputText>
+                        <ValidationMessage For="(() => login.Password)"></ValidationMessage>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary rounded-pill mt-4 py-3 w-100">Login</button>
+            </EditForm>
+
         </div>
     </div>
 </div>
