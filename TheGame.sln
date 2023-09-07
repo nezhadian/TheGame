@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.33423.256
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheGame.Server", "TheGame\Server\TheGame.Server.csproj", "{A5AE89F4-EC51-41AD-B785-2C0FAA52AF8B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TheGame.Server", "TheGame\Server\TheGame.Server.csproj", "{A5AE89F4-EC51-41AD-B785-2C0FAA52AF8B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheGame.Client", "TheGame\Client\TheGame.Client.csproj", "{516CC8D5-5680-47D7-9AE1-19591E8C6667}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TheGame.Client", "TheGame\Client\TheGame.Client.csproj", "{516CC8D5-5680-47D7-9AE1-19591E8C6667}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheGame.Shared", "TheGame\Shared\TheGame.Shared.csproj", "{95FCDCEF-9381-4E97-B6FB-3E23EE7C5824}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TheGame.Shared", "TheGame\Shared\TheGame.Shared.csproj", "{95FCDCEF-9381-4E97-B6FB-3E23EE7C5824}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
