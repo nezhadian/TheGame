@@ -11,7 +11,7 @@ namespace TheGame.Shared
     {
         [Required]
         public string Email { get; set; }
-        [Required]
+        [Required,MinLength(8,ErrorMessage ="Password must be at least 8 characters")]
         public string Password { get; set; }
     }
 }
