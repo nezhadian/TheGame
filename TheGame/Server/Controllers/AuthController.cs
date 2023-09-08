@@ -34,5 +34,19 @@ namespace TheGame.Server.Controllers
             else
                 return BadRequest(response);
         }
+
+        
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(LoginData data)
+        {
+            var response = await _auth.Login(data.Email, data.Password);
+
+
+            if (response.IsSuccess)
+                return Ok(response);
+            else
+                return BadRequest(response);
+        }
     }
 }
