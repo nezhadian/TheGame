@@ -1,10 +1,13 @@
 ﻿@page "/login"
+@inject IAuthService AuthService;
+@inject NavigationManager NavigationService;
+@inject ILocalStorageService StorageService;
 
 <div class="m-auto">
     <div class="container">
         <div class="row align-items-center justify-content-center" style="margin-top:15vh">
 
-            <EditForm Model="login">
+            <EditForm Model="login" OnValidSubmit="SubmitLogin">
                 <DataAnnotationsValidator></DataAnnotationsValidator>
                 <div style="width:350px">
                     <div class="form-row">
@@ -19,8 +22,25 @@
                         <ValidationMessage For="(() => login.Password)"></ValidationMessage>
                     </div>
                 </div>
+                @switch (SubmitButton.Status)
+                {
+                    case FormButtonStatus.ButtonStatus.Idle:
+                        <button type="submit" class="btn btn-primary rounded-pill mt-4 py-3 w-100">Login</button>
 
-                <button type="submit" class="btn btn-primary rounded-pill mt-4 py-3 w-100">Login</button>
+                        break;
+                    case FormButtonStatus.ButtonStatus.Loading:
+                        <span class="disabled btn btn-primary rounded-pill mt-4 py-3 w-100">Login...</span>
+                        break;
+                    case FormButtonStatus.ButtonStatus.Success:
+                        <button class="btn btn-success rounded-pill mt-4 py-3 w-100" @onclick="NavigateToHomePage">Successfully Logined</button>
+                        break;
+                    case FormButtonStatus.ButtonStatus.Error:
+                        <button type="submit" class="btn btn-primary rounded-pill mt-4 py-3 w-100">Login</button>
+                        <span class="d-block mt-2 text-danger text-center text-wrap">@SubmitButton.Message</span>
+                        break;
+                    default:
+                        break;
+                }
             </EditForm>
 
         </div>
@@ -29,4 +49,31 @@
 
 @code {
     public LoginData login = new LoginData();
+
+    public FormButtonStatus SubmitButton = new FormButtonStatus();
+
+
+    public async Task SubmitLogin()
+    {
+        SubmitButton.Status = FormButtonStatus.ButtonStatus.Loading;
+
+        var response = await AuthService.Login(login);
+
+        if (response.IsSuccess)
+        {
+            await StorageService.SetItemAsStringAsync("token", response.Data);
+            SubmitButton.Status = FormButtonStatus.ButtonStatus.Success;
+            NavigateToHomePage();
+        }
+        else
+        {
+            SubmitButton.Status = FormButtonStatus.ButtonStatus.Error;
+            SubmitButton.Message = response.Message;
+        }
+    }
+
+    public void NavigateToHomePage()
+    {
+        NavigationService.NavigateTo("/");
+    }
 }
