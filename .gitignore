@@ -362,3 +362,4 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /TheGame/Server/Data/game.db
+/TheGame/Server/Data/game.db-journal
