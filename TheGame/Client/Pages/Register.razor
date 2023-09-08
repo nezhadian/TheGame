@@ -1,10 +1,12 @@
 ﻿@page "/register"
+@inject IAuthService AuthService;
+@inject NavigationManager NavigationService;
 
 <div class="m-auto">
     <div class="container">
-        <div class="row align-items-center justify-content-center" style="margin-top:15vh">
+        <div class="row align-items-center justify-content-center" style="margin-top:10vh">
 
-            <EditForm Model="register">
+            <EditForm Model="register" OnValidSubmit="HandleRegistration">
                 <DataAnnotationsValidator></DataAnnotationsValidator>
                 <div style="width:350px">
 
@@ -33,7 +35,24 @@
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-outline-primary rounded-pill mt-4 py-3 w-100">Register</button>
+                @switch (Status)
+                {
+                    case RegisterStatus.Idle:
+                        <button type="submit" class="btn btn-outline-primary rounded-pill mt-4 py-3 w-100">Register</button>
+                        break;
+                    case RegisterStatus.OnRegistering:
+                        <span class="disabled btn btn-outline-primary rounded-pill mt-4 py-3 w-100">Registering</span>
+                        break;
+                    case RegisterStatus.Success:
+                        <button class="btn btn-success rounded-pill mt-4 py-3 w-100" @onclick="NavigateToHomePage">Successfully Registered</button>
+                        break;
+                    case RegisterStatus.Error:
+                        <button type="submit" class="btn btn-outline-primary rounded-pill mt-4 py-3 w-100">Register</button>
+                        <span class="d-block mt-2 text-danger text-center text-wrap">@Message</span>
+                        break;
+                    default:
+                        break;
+                }
             </EditForm>
 
         </div>
@@ -41,5 +60,37 @@
 </div>
 
 @code {
+
     public RegisterData register = new RegisterData();
+
+    public enum RegisterStatus
+    {
+        Idle,OnRegistering,Success,Error
+    }
+
+    public RegisterStatus Status { get; set; }
+    public string Message { get; set; }
+
+
+    async Task HandleRegistration()
+    {
+        Status = RegisterStatus.OnRegistering;
+
+        var response = await AuthService.Register(register);
+
+        if (response.IsSuccess)
+        {
+            Status = RegisterStatus.Success;
+            NavigateToHomePage();
+        }
+        else
+        {
+            Status = RegisterStatus.Error;
+            Message = response.Message;
+        }
+    }
+    public void NavigateToHomePage()
+    {
+        NavigationService.NavigateTo("/");
+    }
 }
