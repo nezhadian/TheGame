@@ -12,5 +12,8 @@ namespace TheGame.Server.Data
         public DataContext(DbContextOptions options):base(options){}
 
         public DbSet<User> Users { get; set; }
+        public DbSet<Unit> Units { get; set; }
+        public DbSet<UserUnit> UserUnits { get; set; }
+
     }
 }
