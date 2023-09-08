@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,6 +48,21 @@ namespace TheGame.Server.Controllers
 
 
             return Ok($"Added new {unit.Title} for {user.Username}");
+        }
+        [HttpGet("getall")]
+        public async Task<IActionResult> GetUserUnits()
+        {
+            var user = await _utility.GetUser();
+            var userUnits = await _context.UserUnits
+                .Where(u => u.UserId == user.Id)
+                .Select(u => new UserUnitResponse
+                {
+                    UnitId = u.UnitId,
+                    HitPoints = u.HitPoint
+                })
+                .ToListAsync();
+
+            return Ok(userUnits);
         }
 
     }
