@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using TheGame.Client.Services;
 
 namespace TheGame.Client
 {
@@ -18,6 +19,9 @@ namespace TheGame.Client
             builder.RootComponents.Add<App>("#app");
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+            
+            //me
+            builder.Services.AddScoped<IAuthService, AuthService>();
 
             await builder.Build().RunAsync();
         }
