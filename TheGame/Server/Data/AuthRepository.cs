@@ -1,7 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,10 +16,12 @@ namespace TheGame.Server.Data
     public class AuthRepository : IAuthRepository
     {
         readonly DataContext _context;
+        readonly IConfiguration _configuration;
 
-        public AuthRepository(DataContext context)
+        public AuthRepository(DataContext context, IConfiguration configuration)
         {
             _context = context;
+            _configuration = configuration;
         }
 
         //
@@ -47,10 +53,36 @@ namespace TheGame.Server.Data
                 return new AuthResponse<string>
                 {
                     IsSuccess = true,
-                    Data = "Id: " + user.Id
+                    Data = GenerateToken(user)
                 };
             }
         }
+
+        private string GenerateToken(User user)
+        {
+            var claims = new Claim[]
+            {
+                new Claim(ClaimTypes.Name,user.Username),
+                new Claim(ClaimTypes.Email,user.Email),
+                new Claim(ClaimTypes.NameIdentifier,user.Id.ToString()),
+            };
+
+            var byteKey = Encoding.UTF8.GetBytes(_configuration.GetSection("AppSettings:Token").Value.ToString());
+            var key = new SymmetricSecurityKey(byteKey);
+            
+            var creds = new SigningCredentials(key,SecurityAlgorithms.HmacSha512Signature);
+            
+            var token = new JwtSecurityToken(
+                claims : claims,
+                expires : DateTime.Now.AddDays(2),
+                signingCredentials:creds);
+
+            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+
+            return jwt;
+                
+        }
+
         private bool IsCorrectPassword(byte[] passwordHash, byte[] passwordSalt, string password)
         {
             using (var hmac = new HMACSHA512(passwordSalt))
