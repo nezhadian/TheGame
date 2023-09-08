@@ -3,49 +3,78 @@
     <div class="container">
         <Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
             <NotAuthorized>
-                <a class="navbar-brand" href="">Game</a>
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <NavLink class="nav-link" href="login">Login</NavLink>
-                    </li>
+                <div class="sticky-top w-100 d-flex justify-content-between">
+                    <a class="navbar-brand" href="">Game</a>
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <NavLink class="nav-link" href="login">Login</NavLink>
+                        </li>
 
-                    <li class="nav-item">
-                        <NavLink class="nav-link" href="register">Register</NavLink>
-                    </li>
+                        <li class="nav-item">
+                            <NavLink class="nav-link" href="register">Register</NavLink>
+                        </li>
 
-                </ul>
+                    </ul>
+                </div>
             </NotAuthorized>
             <Authorized>
-                <a class="navbar-brand" href="">
-                    <div class="d-flex flex-row align-items-center">
-                        <div class="rounded-circle bg-primary text-white text-center" style="width:3rem;height:3rem"></div>
-                        <span class="ml-3" href="">@context.User.Identity.Name</span>    
-                    </div>
-                </a>
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <NavLink class="nav-link" href="">Home</NavLink>
-                    </li>
-
-                    <li class="nav-item">
-                        <NavLink class="nav-link" href="history">History</NavLink>
-                    </li>
-
-                    <li class="nav-item">
-                        <NavLink class="nav-link" href="leaderboard">Leaderboard</NavLink>
-                    </li>
-
-                    <li class="nav-item">
-                        <NavLink class="nav-link" href="army">MyArmy</NavLink>
-                    </li>
-
-                    <li class="nav-item">
-                        <div class="rounded-pill bg-success py-2 px-4 text-white">
-                            <span class="font-weight-bold">@ShopService.Costs</span>
-                            <span class="pl-1 oi oi-dollar"></span>
+                <div class="w-100 sticky-top">
+                    <div class="d-flex flex-row justify-content-between align-items-center">
+                        <div>
+                            <a class="navbar-brand" href="">
+                                <div class="d-flex flex-row align-items-center">
+                                    <div class="rounded-circle bg-primary text-white text-center" style="width:3rem;height:3rem"></div>
+                                    <span class="ml-3" href="">@context.User.Identity.Name</span>
+                                </div>
+                            </a>
                         </div>
-                    </li>
-                </ul>
+
+                        <div class="d-flex flex-row align-items-center">
+
+                            <ul class="navbar-nav d-none d-md-flex">
+                                <li class="nav-item">
+                                    <NavLink class="nav-link" href="">Home</NavLink>
+                                </li>
+
+                                <li class="nav-item">
+                                    <NavLink class="nav-link" href="history">History</NavLink>
+                                </li>
+
+                                <li class="nav-item">
+                                    <NavLink class="nav-link" href="leaderboard">Leaderboard</NavLink>
+                                </li>
+
+                                <li class="nav-item">
+                                    <NavLink class="nav-link" href="army">MyArmy</NavLink>
+                                </li>
+                            </ul>
+
+                            <div class="ml-3 rounded-pill bg-success py-2 px-4 text-white">
+                                <span class="font-weight-bold">@ShopService.Costs</span>
+                                <span class="pl-1 oi oi-dollar"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-md-none">
+                        <ul class="navbar-nav mr-3 mt-2 justify-content-between">
+                            <li class="nav-item">
+                                <NavLink class="nav-link" href="">Home</NavLink>
+                            </li>
+
+                            <li class="nav-item">
+                                <NavLink class="nav-link" href="history">History</NavLink>
+                            </li>
+
+                            <li class="nav-item">
+                                <NavLink class="nav-link" href="leaderboard">Leaderboard</NavLink>
+                            </li>
+
+                            <li class="nav-item">
+                                <NavLink class="nav-link" href="army">MyArmy</NavLink>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
             </Authorized>
         </Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
         
