@@ -35,20 +35,20 @@
                     </div>
                 </div>
 
-                @switch (Status)
+                @switch (SubmitButton.Status)
                 {
-                    case RegisterStatus.Idle:
+                    case FormButtonStatus.ButtonStatus.Idle:
                         <button type="submit" class="btn btn-outline-primary rounded-pill mt-4 py-3 w-100">Register</button>
                         break;
-                    case RegisterStatus.OnRegistering:
+                    case FormButtonStatus.ButtonStatus.Loading:
                         <span class="disabled btn btn-outline-primary rounded-pill mt-4 py-3 w-100">Registering</span>
                         break;
-                    case RegisterStatus.Success:
+                    case FormButtonStatus.ButtonStatus.Success:
                         <button class="btn btn-success rounded-pill mt-4 py-3 w-100" @onclick="NavigateToHomePage">Successfully Registered</button>
                         break;
-                    case RegisterStatus.Error:
+                    case FormButtonStatus.ButtonStatus.Error:
                         <button type="submit" class="btn btn-outline-primary rounded-pill mt-4 py-3 w-100">Register</button>
-                        <span class="d-block mt-2 text-danger text-center text-wrap">@Message</span>
+                        <span class="d-block mt-2 text-danger text-center text-wrap">@SubmitButton.Message</span>
                         break;
                     default:
                         break;
@@ -63,30 +63,23 @@
 
     public RegisterData register = new RegisterData();
 
-    public enum RegisterStatus
-    {
-        Idle,OnRegistering,Success,Error
-    }
-
-    public RegisterStatus Status { get; set; }
-    public string Message { get; set; }
-
+    public FormButtonStatus SubmitButton = new FormButtonStatus();
 
     async Task HandleRegistration()
     {
-        Status = RegisterStatus.OnRegistering;
+        SubmitButton.Status = FormButtonStatus.ButtonStatus.Loading;
 
         var response = await AuthService.Register(register);
 
         if (response.IsSuccess)
         {
-            Status = RegisterStatus.Success;
+            SubmitButton.Status = FormButtonStatus.ButtonStatus.Success;
             NavigateToHomePage();
         }
         else
         {
-            Status = RegisterStatus.Error;
-            Message = response.Message;
+            SubmitButton.Status = FormButtonStatus.ButtonStatus.Error;
+            SubmitButton.Message = response.Message;
         }
     }
     public void NavigateToHomePage()
