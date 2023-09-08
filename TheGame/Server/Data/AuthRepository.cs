@@ -19,7 +19,50 @@ namespace TheGame.Server.Data
 
         public async Task<AuthResponse<string>> Login(string usernameOrEmail, string password)
         {
-            throw new NotImplementedException();
+            string lowerUsernameOrEmail = usernameOrEmail.ToLower();
+            var user = _context.Users.FirstOrDefault(u =>
+                 u.Email.ToLower() == lowerUsernameOrEmail ||
+                 u.Username.ToLower() == lowerUsernameOrEmail);
+                
+            if(user == null)
+            {
+                return new AuthResponse<string>
+                {
+                    IsSuccess = false,
+                    Message = "this user is not exists"
+                };
+
+            }else if (!IsCorrectPassword(user.PasswordHash, user.PasswordSalt, password))
+            {
+                return new AuthResponse<string>
+                {
+                    IsSuccess = false,
+                    Message = "wrong password"
+                };
+            }
+            else
+            {
+                return new AuthResponse<string>
+                {
+                    IsSuccess = true,
+                    Data = "Id: " + user.Id
+                };
+            }
+        }
+
+        private bool IsCorrectPassword(byte[] passwordHash, byte[] passwordSalt, string password)
+        {
+            using (var hmac = new HMACSHA512(passwordSalt))
+            {
+                byte[] hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+
+                for (int i = 0; i < hash.Length; i++)
+                {
+                    if (hash[i] != passwordHash[i])
+                        return false;
+                }
+                return true;
+            }
         }
 
         public async Task<AuthResponse<int>> Register(User user, string password)
