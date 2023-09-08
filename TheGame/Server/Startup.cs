@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Linq;
 using System.Text;
 using TheGame.Server.Data;
+using TheGame.Server.Services;
 
 namespace TheGame.Server
 {
@@ -29,6 +31,7 @@ namespace TheGame.Server
         {
             //me
             services.AddScoped<IAuthRepository, AuthRepository>();
+            services.AddScoped<IUtilityService, UtilityService>();
 
             //ef
             services.AddDbContext<DataContext>(options =>
@@ -49,6 +52,8 @@ namespace TheGame.Server
                     };
                 });
 
+            //http Context
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddControllersWithViews();
             services.AddRazorPages();
@@ -76,7 +81,7 @@ namespace TheGame.Server
             app.UseRouting();
 
             app.UseAuthentication();
-            app.UseRequestLocalization();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
