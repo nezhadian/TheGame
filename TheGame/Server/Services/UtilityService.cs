@@ -23,7 +23,7 @@ namespace TheGame.Server.Services
         public async Task<User> GetUser()
         {
             var userId = int.Parse(_httpContext.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value.ToString());
-            return await _context.FindAsync<User>(userId);
+            return await _context.Users.FindAsync(userId);
         }
     }
 }
