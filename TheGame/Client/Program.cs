@@ -26,6 +26,7 @@ namespace TheGame.Client
             //me
             builder.Services.AddScoped<IAuthService, AuthService>();
             builder.Services.AddScoped<IShopService, ShopService>();
+            builder.Services.AddScoped<IUserUnitService, UserUnitService>();
 
             //blazored
             builder.Services.AddBlazoredLocalStorage();
