@@ -8,6 +8,7 @@ using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text.Json;
 using System.Threading.Tasks;
+using TheGame.Client.Services;
 
 namespace TheGame.Client.Classes
 {
@@ -15,11 +16,13 @@ namespace TheGame.Client.Classes
     {
         private readonly ILocalStorageService _storage;
         private readonly HttpClient _http;
+        private readonly IShopService _shopService;
 
-        public AuthStateProvider(ILocalStorageService storage, HttpClient http)
+        public AuthStateProvider(ILocalStorageService storage, HttpClient http, IShopService userService)
         {
             _storage = storage;
             _http = http;
+            _shopService = userService;
         }
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
@@ -35,12 +38,14 @@ namespace TheGame.Client.Classes
                     identity = new ClaimsIdentity(ParseClaimsFromJWT(token), "jwt");
                     _http.DefaultRequestHeaders.Authorization =
                         new AuthenticationHeaderValue("Bearer",token.Replace("\"",""));
+                    await _shopService.GetCostsAsync();
                 }
                 catch
                 {
                     identity = new ClaimsIdentity();
                     _http.DefaultRequestHeaders.Authorization = null;
                     await _storage.RemoveItemAsync("token");
+                    
                 }
             }
 
