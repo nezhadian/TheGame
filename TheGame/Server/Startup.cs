@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -6,7 +7,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using System.Linq;
+using System.Text;
 using TheGame.Server.Data;
 
 namespace TheGame.Server
@@ -27,8 +30,24 @@ namespace TheGame.Server
             //me
             services.AddScoped<IAuthRepository, AuthRepository>();
 
+            //ef
             services.AddDbContext<DataContext>(options =>
                    options.UseSqlite(Configuration.GetConnectionString("Default")));
+
+            //authentication
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(op =>
+                {
+                    op.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(
+                            Encoding.UTF8.GetBytes(
+                                Configuration.GetSection("AppSettings:Token").Value.ToString())),
+                        ValidateIssuer = false,
+                        ValidateAudience = false
+                    };
+                });
 
 
             services.AddControllersWithViews();
@@ -55,6 +74,9 @@ namespace TheGame.Server
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseRequestLocalization();
 
             app.UseEndpoints(endpoints =>
             {
