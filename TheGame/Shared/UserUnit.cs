@@ -16,6 +16,6 @@ namespace TheGame.Shared
         public int UnitId { get; set; }
         public Unit Unit { get; set; }
 
-        public int HitPoint { get; set; }
+        public int HitPoint { get; set; } = 100;
     }
 }

@@ -12,7 +12,7 @@ namespace TheGame.Shared
         public string Title { get; set; }
         public int Attack { get; set; }
         public int Defence { get; set; }
-        public int HitPoint { get; set; }
+        public int HitPoint { get; set; } = 100;
         public int Cost { get; set; }
     }
 }
