@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using TheGame.Client.Services;
+using Blazored.LocalStorage;
 
 namespace TheGame.Client
 {
@@ -22,6 +23,9 @@ namespace TheGame.Client
             
             //me
             builder.Services.AddScoped<IAuthService, AuthService>();
+
+            //blazored
+            builder.Services.AddBlazoredLocalStorage();
 
             await builder.Build().RunAsync();
         }
