@@ -1,24 +1,54 @@
 ﻿@page "/"
 
-<div class="text-center mt-3">
-    <h1>Wellcome </h1>
+<Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
+    <Authorized>
+        <div class="text-center mt-3">
+            <h1>Wellcome <span class="font-weight-bold">@context.User.Identity.Name</span></h1>
 
-    Welcome to <b>TheGame</b>.
-    this game is all about random fights.
+        </div>
 
-    <br />
-    let`s have a quick start
+        <div class="d-flex flex-column flex-md-row w-100 align-items-center justify-content-center mt-5">
 
-</div>
+            <a href="history">
+                <button class="btn btn-outline-primary rounded-pill py-4 px-5 mt-3 ml-md-3">History</button>
+            </a>
 
-<div class="d-flex w-100 align-items-center justify-content-center mt-5">
-    <a href="login">
-        <button class="btn btn-primary rounded-pill py-4 px-5">Login</button>
-    </a>
+            <a href="leaderboard">
+                <button class="btn btn-outline-primary rounded-pill py-4 px-5 mt-3 ml-md-3">Leaderboard</button>
+            </a>
 
-    <a href="register">
-        <button class="btn btn-outline-primary rounded-pill py-4 px-5 ml-3">Create New Acount</button>
-    </a>
-    
-</div>
+            <a href="army">
+                <button class="btn btn-outline-primary rounded-pill py-4 px-5 mt-3 ml-md-3">My Army</button>
+            </a>
+
+        </div>
+
+
+    </Authorized>
+    <NotAuthorized>
+        <div class="text-center mt-3">
+            <h1>Wellcome </h1>
+
+            Welcome to <b>TheGame</b>.
+            this game is all about random fights.
+
+            <br />
+            let`s have a quick start
+
+        </div>
+
+        <div class="d-flex w-100 align-items-center justify-content-center mt-5">
+            <a href="login">
+                <button class="btn btn-primary rounded-pill py-4 px-5">Login</button>
+            </a>
+
+            <a href="register">
+                <button class="btn btn-outline-primary rounded-pill py-4 px-5 ml-3">Create New Acount</button>
+            </a>
+
+        </div>
+
+
+    </NotAuthorized>
+</Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
 
