@@ -24,6 +24,15 @@ namespace TheGame.Server.Data
 
         public async Task<AuthResponse<int>> Register(User user, string password)
         {
+            if (IsUserExists(user.Email,user.Username))
+            {
+                return new AuthResponse<int>
+                {
+                    IsSuccess = false,
+                    Message = "this email or username is used by another user"
+                };
+            }
+
             var passwordHash = GenerateHash(password);
             user.PasswordHash = passwordHash.hash;
             user.PasswordSalt = passwordHash.salt;
@@ -46,5 +55,17 @@ namespace TheGame.Server.Data
                 return (hash, hmac.Key);
             }
         }
+        public bool IsUserExists(string email, string username)
+        {
+            string lowerEmail = email.ToLower();
+            string lowerUsername = email.ToLower();
+
+            var user = _context.Users.FirstOrDefault(
+                u => u.Email.ToLower() == lowerEmail ||
+                     u.Username == username);
+
+            return user != null;
+        }
+
     }
 }
