@@ -23,16 +23,25 @@ namespace TheGame.Server.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterData data)
         {
-            var response = await _auth.Register(new User
+            if (await _auth.IsUserExists(data.Email, data.Username))
             {
-                Email = data.Email,
-                Username = data.Username,
-            }, data.Password);
-
-            if (response.IsSuccess)
-                return Ok(response);
+                return BadRequest(new AuthResponse<int>
+                {
+                    IsSuccess = false,
+                    Message = "this email or username is used by another user"
+                });
+            }
             else
-                return BadRequest(response);
+            {
+                var response = await _auth.Register(new User
+                {
+                    Email = data.Email,
+                    Username = data.Username,
+                }, data.Password);
+
+                return response.IsSuccess ? Ok(response) : BadRequest(response) ;
+            }
+
         }
 
         

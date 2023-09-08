@@ -10,5 +10,6 @@ namespace TheGame.Server.Data
     {
         Task<AuthResponse<string>> Login(string usernameOrEmail,string password);
         Task<AuthResponse<int>> Register(User user,string password);
+        Task<bool> IsUserExists(string email,string username);
     }
 }

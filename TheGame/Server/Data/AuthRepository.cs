@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
@@ -17,10 +18,11 @@ namespace TheGame.Server.Data
             _context = context;
         }
 
+        //
         public async Task<AuthResponse<string>> Login(string usernameOrEmail, string password)
         {
             string lowerUsernameOrEmail = usernameOrEmail.ToLower();
-            var user = _context.Users.FirstOrDefault(u =>
+            var user = await _context.Users.FirstOrDefaultAsync(u =>
                  u.Email.ToLower() == lowerUsernameOrEmail ||
                  u.Username.ToLower() == lowerUsernameOrEmail);
                 
@@ -49,7 +51,6 @@ namespace TheGame.Server.Data
                 };
             }
         }
-
         private bool IsCorrectPassword(byte[] passwordHash, byte[] passwordSalt, string password)
         {
             using (var hmac = new HMACSHA512(passwordSalt))
@@ -65,22 +66,14 @@ namespace TheGame.Server.Data
             }
         }
 
+        //
         public async Task<AuthResponse<int>> Register(User user, string password)
         {
-            if (IsUserExists(user.Email,user.Username))
-            {
-                return new AuthResponse<int>
-                {
-                    IsSuccess = false,
-                    Message = "this email or username is used by another user"
-                };
-            }
-
             var passwordHash = GenerateHash(password);
             user.PasswordHash = passwordHash.hash;
             user.PasswordSalt = passwordHash.salt;
 
-            await _context.Users.AddAsync(user);
+            _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
             return new AuthResponse<int>
@@ -89,7 +82,6 @@ namespace TheGame.Server.Data
                 IsSuccess = true,
             };
         }
-
         public (byte[] hash,byte[] salt) GenerateHash(string password)
         {
             using(var hmac = new HMACSHA512())
@@ -98,17 +90,18 @@ namespace TheGame.Server.Data
                 return (hash, hmac.Key);
             }
         }
-        public bool IsUserExists(string email, string username)
+
+        //
+        public async Task<bool> IsUserExists(string email, string username)
         {
             string lowerEmail = email.ToLower();
             string lowerUsername = email.ToLower();
 
-            var user = _context.Users.FirstOrDefault(
+            var user = await _context.Users.FirstOrDefaultAsync(
                 u => u.Email.ToLower() == lowerEmail ||
                      u.Username == username);
 
             return user != null;
         }
-
     }
 }
