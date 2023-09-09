@@ -58,7 +58,7 @@ namespace TheGame.Server.Controllers
                 .Select(u => new UserUnitResponse
                 {
                     UnitId = u.UnitId,
-                    HitPoints = u.HitPoint
+                    HitPoint = u.HitPoint
                 })
                 .ToListAsync();
 
