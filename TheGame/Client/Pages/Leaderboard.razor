@@ -1,0 +1,73 @@
+﻿@page "/leaderboard"
+@inject IUserService UserService;
+@inject AuthenticationStateProvider AuthService;
+@attribute [Authorize]
+
+<style>
+    .table td{
+        padding:0.25rem;
+        border-top:none;
+        vertical-align:middle;
+    }
+    .table thead th {
+        border: none;
+    }
+</style>
+
+@if(UserService.Leaderboard == null)
+{
+    <span>Loading leaderboard...</span>
+}
+else
+{
+    <table class="table table-hover text-center w-75 m-auto">
+        <thead>
+            <tr class="text-muted">
+                <th>#</th>
+                <th>Username</th>
+                <th>Battles</th>
+                <th>Victories</th>
+                <th>Defeats</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (UserStatistcs user in UserService.Leaderboard)
+            {
+            <tr class="@(user.UserId == MyUserId ? "text-primary font-weight-bold py-2":"")">
+                <td>@user.Rank</td>
+                <td>@user.Username</td>
+                <td>@user.Battles</td>
+                <td>@user.Victories</td>
+                <td>@user.Defeats</td>
+                <td>
+                    @if (user.UserId != MyUserId)
+                    {
+                        <button class="btn btn-primary rounded-0 w-100">Fight</button>
+                    }
+                    else
+                    {
+                        
+                        <a href="history" class="btn w-100 btn-link font-weight-normal">
+                            View
+                        </a>
+                    }
+                </td>
+            </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    public int MyUserId { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await UserService.GetLeaderboardAsync();
+        var auth = await AuthService.GetAuthenticationStateAsync();
+        MyUserId = int.Parse(auth.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value);
+    }
+
+}
