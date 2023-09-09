@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TheGame.Server.Data;
 
 namespace TheGame.Server.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230909143009_AttackEntry")]
+    partial class AttackEntry
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,31 +24,21 @@ namespace TheGame.Server.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("AttackerUnitId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int>("BattleId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("Damage")
                         .HasColumnType("INTEGER");
 
-                    b.Property<bool>("IsUnitDead")
+                    b.Property<int>("IsDamageForAttacker")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("OpponentUnitId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("Round")
+                    b.Property<int>("IsUnitDead")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AttackerUnitId");
-
                     b.HasIndex("BattleId");
-
-                    b.HasIndex("OpponentUnitId");
 
                     b.ToTable("Attacks");
                 });
@@ -183,29 +175,13 @@ namespace TheGame.Server.Migrations
 
             modelBuilder.Entity("TheGame.Shared.Attack", b =>
                 {
-                    b.HasOne("TheGame.Shared.UserUnit", "AttackerUnit")
-                        .WithMany()
-                        .HasForeignKey("AttackerUnitId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("TheGame.Shared.Battle", "Battle")
                         .WithMany()
                         .HasForeignKey("BattleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("TheGame.Shared.UserUnit", "OpponentUnit")
-                        .WithMany()
-                        .HasForeignKey("OpponentUnitId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AttackerUnit");
-
                     b.Navigation("Battle");
-
-                    b.Navigation("OpponentUnit");
                 });
 
             modelBuilder.Entity("TheGame.Shared.Battle", b =>
