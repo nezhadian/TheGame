@@ -36,18 +36,24 @@ namespace TheGame.Server.Controllers
 
             var user = await _utility.GetUser();
 
+            if(user.TotalCosts < unit.Cost)
+            {
+                return NotFound("you do not have enough money");
+            }
+
+            user.TotalCosts -= unit.Cost;
             var userUnit = new UserUnit
             {
                 UnitId = unit.Id,
                 UserId = user.Id,
+                HitPoint = unit.HitPoint
             };
 
             _context.UserUnits.Add(userUnit);
 
             await _context.SaveChangesAsync();
 
-
-            return Ok($"Added new {unit.Title} for {user.Username}");
+            return Ok(userUnit);
         }
         [HttpGet("getall")]
         public async Task<IActionResult> GetUserUnits()
