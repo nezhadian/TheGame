@@ -1,9 +1,9 @@
-<Microsoft.AspNetCore.Components.Authorization.CascadingAuthenticationState>
+<CascadingAuthenticationState>
     <Router AppAssembly="@typeof(Program).Assembly" PreferExactMatches="@true">
         <Found Context="routeData">
-            <Microsoft.AspNetCore.Components.Authorization.AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
 
-            </Microsoft.AspNetCore.Components.Authorization.AuthorizeRouteView>
+            </AuthorizeRouteView>
         </Found>
         <NotFound>
             <LayoutView Layout="@typeof(MainLayout)">
@@ -11,4 +11,4 @@
             </LayoutView>
         </NotFound>
     </Router>
-</Microsoft.AspNetCore.Components.Authorization.CascadingAuthenticationState>
+</CascadingAuthenticationState>
