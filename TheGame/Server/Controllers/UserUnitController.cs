@@ -40,6 +40,10 @@ namespace TheGame.Server.Controllers
             {
                 return NotFound("you do not have enough money");
             }
+            if(await _utility.IsUserInBattle())
+            {
+                return BadRequest("during a battle you can`t buy new items");
+            }
 
             user.TotalCosts -= unit.Cost;
             var userUnit = new UserUnit

@@ -69,10 +69,10 @@ namespace TheGame.Server.Controllers
             var attacker = await _utility.GetUser();
             var opponent = await _context.Users.FindAsync(opponentId);
 
-            if (await IsInBattle(attacker.Id))
-                return BadRequest($"Attacker ({attacker.Username}) is in battle");
+            if (await _utility.IsUserInBattle())
+                return BadRequest($"your last battle isn`t completed");
 
-            if (await IsInBattle(opponent.Id))
+            if (await _utility.IsInBattle(opponent.Id))
                 return BadRequest($"Opponent ({attacker.Username}) is in battle");
 
             var attackerHitpoint = await CalculateHitpoint(attacker.Id);
@@ -114,12 +114,6 @@ namespace TheGame.Server.Controllers
                 .Select(u => u.UserId == userId ? u.HitPoint :0).SumAsync();
 
             return count;
-        }
-        public async Task<bool> IsInBattle(int userId)
-        {
-            return await _context.Battles.AnyAsync(
-                u => !u.IsCompleted &&  
-                (u.AttackerId == userId || u.OpponentId == userId));
         }
 
         

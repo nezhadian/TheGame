@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,10 +21,29 @@ namespace TheGame.Server.Services
             _context = context;
         }
 
+        private int GetUserId()
+        {
+            return int.Parse(_httpContext.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value.ToString());
+        }
+
         public async Task<User> GetUser()
         {
-            var userId = int.Parse(_httpContext.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value.ToString());
+            int userId = GetUserId();
             return await _context.Users.FindAsync(userId);
+        }
+
+        
+
+        public Task<bool> IsUserInBattle()
+        {
+            return IsInBattle(GetUserId());
+        }
+
+        public async Task<bool> IsInBattle(int userId)
+        {
+            return await _context.Battles.AnyAsync(
+                u => !u.IsCompleted &&
+                (u.AttackerId == userId || u.OpponentId == userId));
         }
     }
 }

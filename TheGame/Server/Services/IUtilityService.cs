@@ -9,5 +9,10 @@ namespace TheGame.Server.Services
     public interface IUtilityService
     {
         Task<User> GetUser();
+
+        Task<bool> IsUserInBattle();
+
+        Task<bool> IsInBattle(int userId);
+        
     }
 }
