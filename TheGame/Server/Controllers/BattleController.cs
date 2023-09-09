@@ -26,6 +26,36 @@ namespace TheGame.Server.Controllers
             _context = context;
         }
 
+        [HttpGet("getmybattle")]
+        public async Task<IActionResult> GetUserBattle()
+        {
+            var user = await _utility.GetUser();
+
+            var battles = _context.Battles
+                .Where(u => u.AttackerId == user.Id || u.OpponentId == user.Id)
+                .Include(u => u.Attacker)
+                .Include(u => u.Opponent);
+
+            var inProgressBattle = await battles.FirstOrDefaultAsync(b => !b.IsCompleted);
+
+            if (inProgressBattle == null)
+                return NotFound("you are not in battle");
+
+            var battleProgress = new BattleProgress
+            {
+                BattleId = inProgressBattle.Id,
+                AttackerName = inProgressBattle.Attacker.Username,
+                OpponentName = inProgressBattle.Opponent.Username,
+                AttackerHitpoint = inProgressBattle.AttackerHitpoint,
+                OpponentHitpoint = inProgressBattle.OpponentHitpoint,
+                AttackerDamage = inProgressBattle.AttackerDamage,
+                OpponentDamage = inProgressBattle.OpponentDamage,
+                Rounds = inProgressBattle.Rounds,
+            };
+
+            return Ok(battleProgress);
+        }
+
         [HttpPost("start")]
         public async Task<IActionResult> StartBattle([FromBody] int opponentId)
         {
