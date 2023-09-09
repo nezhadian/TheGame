@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TheGame.Client.Services;
 using Blazored.LocalStorage;
+using Blazored.Toast;
 using Microsoft.AspNetCore.Components.Authorization;
 using TheGame.Client.Classes;
 
@@ -30,6 +31,7 @@ namespace TheGame.Client
 
             //blazored
             builder.Services.AddBlazoredLocalStorage();
+            builder.Services.AddBlazoredToast();
 
             //authorization
             builder.Services.AddScoped<AuthenticationStateProvider, AuthStateProvider>();
