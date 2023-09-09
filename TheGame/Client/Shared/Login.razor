@@ -3,6 +3,7 @@
 @inject NavigationManager NavigationService;
 @inject ILocalStorageService StorageService;
 @inject AuthenticationStateProvider AuthenticationStateProvider;
+@inject IToastService ToastService;
 
 <div class="m-auto">
     <div class="container">
@@ -64,6 +65,7 @@
         {
             await StorageService.SetItemAsStringAsync("token", response.Data);
             SubmitButton.Status = FormButtonStatus.ButtonStatus.Success;
+            ToastService.ShowSuccess("Successfully Logined!!");
             await AuthenticationStateProvider.GetAuthenticationStateAsync();
             NavigateToHomePage();
         }
