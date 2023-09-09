@@ -17,12 +17,14 @@ namespace TheGame.Client.Classes
         private readonly ILocalStorageService _storage;
         private readonly HttpClient _http;
         private readonly IShopService _shopService;
+        readonly IBattleService _battle;
 
-        public AuthStateProvider(ILocalStorageService storage, HttpClient http, IShopService userService)
+        public AuthStateProvider(ILocalStorageService storage, HttpClient http, IShopService userService, IBattleService battle)
         {
             _storage = storage;
             _http = http;
             _shopService = userService;
+            _battle = battle;
         }
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
@@ -39,6 +41,7 @@ namespace TheGame.Client.Classes
                     _http.DefaultRequestHeaders.Authorization =
                         new AuthenticationHeaderValue("Bearer",token.Replace("\"",""));
                     await _shopService.GetCostsAsync();
+                    await _battle.GetCurrentBattle();
                 }
                 catch
                 {
