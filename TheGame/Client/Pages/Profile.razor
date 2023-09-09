@@ -2,27 +2,35 @@
 @inject ILocalStorageService StorageService;
 @inject AuthenticationStateProvider AuthService;
 @inject NavigationManager NavigationService;
+@inject IBattleService BattleService;
 @attribute [Authorize]
 
 
-<table class="table mt-3">
-    <tbody>
-        <tr>
-            <td>Id</td>
-            <td>@Id</td>
-        </tr>
+@if (BattleService.CurrentBattle == null)
+{
+    <table class="table mt-3">
+        <tbody>
+            <tr>
+                <td>Id</td>
+                <td>@Id</td>
+            </tr>
 
-        <tr>
-            <td>Username</td>
-            <td>@Name</td>
-        </tr>
+            <tr>
+                <td>Username</td>
+                <td>@Name</td>
+            </tr>
 
-        <tr>
-            <td>Email</td>
-            <td>@Email</td>
-        </tr>
-    </tbody>
-</table>
+            <tr>
+                <td>Email</td>
+                <td>@Email</td>
+            </tr>
+        </tbody>
+    </table>
+}
+else
+{
+    <Battle />
+}
 
 <button class="mt-2 btn btn-danger" @onclick="Logout">Logout</button>
 
@@ -38,7 +46,7 @@
         var auth = await AuthService.GetAuthenticationStateAsync();
         Id = auth.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value.ToString();
         Name = auth.User.FindFirst(System.Security.Claims.ClaimTypes.Name).Value.ToString();
-        Email = auth.User.FindFirst(System.Security.Claims.ClaimTypes.Email).Value.ToString() ;
+        Email = auth.User.FindFirst(System.Security.Claims.ClaimTypes.Email).Value.ToString();
 
     }
 
