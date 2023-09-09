@@ -1,9 +1,9 @@
 ﻿@inject IShopService ShopService;
-<nav class="navbar navbar-light">
+<nav class="navbar navbar-light bg-white">
     <div class="container">
         <Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
             <NotAuthorized>
-                <div class="sticky-top w-100 d-flex justify-content-between">
+                <div class="w-100 d-flex justify-content-between">
                     <a class="navbar-brand" href="">Game</a>
                     <ul class="navbar-nav">
                         <li class="nav-item">
@@ -18,7 +18,7 @@
                 </div>
             </NotAuthorized>
             <Authorized>
-                <div class="w-100 sticky-top">
+                <div class="w-100">
                     <div class="d-flex flex-row justify-content-between align-items-center">
                         <div>
                             <a class="navbar-brand" href="">
