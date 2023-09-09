@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Blazored.Toast.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
@@ -10,9 +11,13 @@ namespace TheGame.Client.Services
     public class ShopService : IShopService
     {
         private readonly HttpClient _http;
-        public ShopService(HttpClient http)
+        readonly IToastService _toast;
+        readonly IUserUnitService _userUnits;
+        public ShopService(HttpClient http, IToastService toast, IUserUnitService userUnits)
         {
             _http = http;
+            _toast = toast;
+            _userUnits = userUnits;
         }
 
         public int Costs { get; set; }
@@ -27,6 +32,21 @@ namespace TheGame.Client.Services
         {
             Costs = await _http.GetFromJsonAsync<int>("api/user/costs");
             RaiseOnChanged();
+        }
+
+        public async Task BuyNewItemAsync(int unitId)
+        {
+            var response = await _http.PostAsJsonAsync("api/userunit/add", unitId);
+            if (response.IsSuccessStatusCode)
+            {
+                _toast.ShowSuccess(await response.Content.ReadAsStringAsync());
+            }
+            else
+            {
+                _toast.ShowError(await response.Content.ReadAsStringAsync());
+            }
+            await GetCostsAsync();
+            await _userUnits.GetUserUnitsAsync();
         }
     }
 }

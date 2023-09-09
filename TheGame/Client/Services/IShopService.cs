@@ -10,5 +10,6 @@ namespace TheGame.Client.Services
         public int Costs { get; set; }
         public event Action OnChanged;
         Task GetCostsAsync();
+        Task BuyNewItemAsync(int unitId);
     }
 }

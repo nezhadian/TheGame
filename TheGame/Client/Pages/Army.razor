@@ -1,6 +1,8 @@
 ﻿@page "/army"
 @inject IUserUnitService UserUnitService;
+@inject IShopService ShopService;
 @attribute [Authorize];
+
 
 
 @foreach (Unit unit in UserUnitService.Units)
@@ -10,7 +12,7 @@
 
         <h5 class="m-0" style="min-width:12rem">@unit.Title's</h5>
 
-        <button class="btn btn-success ml-3">
+        <button class="btn btn-success ml-3" @onclick="() => BuyNewItem(unit.Id)">
             Buy @unit.Cost
             <span class="oi oi-dollar"></span>
         </button>
@@ -23,7 +25,7 @@
             <div class="card mt-3 ml-2" style="width:12rem;flex:0 0 auto">
                 <!-- Card Image-->
                 <div class="card-img-top w-100">
-                    <img class="w-100" src="images/@(unit.Title+".jpeg")" />
+                    <img class="w-100" src="images/@(unit.Title + ".jpeg")" />
                 </div>
 
                 <div class="p-3">
@@ -80,15 +82,20 @@
 
 
 
-        @code {
+@code {
     protected override async Task OnInitializedAsync()
-        {
-            await UserUnitService.GetUnitsAsync();
-            await UserUnitService.GetUserUnitsAsync();
-        }
+    {
+        await UserUnitService.GetUnitsAsync();
+        await UserUnitService.GetUserUnitsAsync();
+    }
 
-        public string GetHeightFromHitPoint(int hitpoint, int unitHitpoint)
-        {
-            return $"height:{((double)hitpoint / unitHitpoint) * 100}%";
-        }
-        }
+    public string GetHeightFromHitPoint(int hitpoint, int unitHitpoint)
+    {
+        return $"height:{((double)hitpoint / unitHitpoint) * 100}%";
+    }
+
+    public async Task BuyNewItem(int unitId)
+    {
+        await ShopService.BuyNewItemAsync(unitId);
+    }
+}
