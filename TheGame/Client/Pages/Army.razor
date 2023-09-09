@@ -22,7 +22,7 @@
 
         @foreach (var item in UserUnitService.UserUnits.Where(u => u.UnitId == unit.Id))
         {
-            <div class="card mt-3 ml-2" style="width:12rem;flex:0 0 auto">
+            <div class="card my-3 ml-2" style="width:12rem;flex:0 0 auto">
                 <!-- Card Image-->
                 <div class="card-img-top w-100">
                     <img class="w-100" src="images/@(unit.Title + ".jpeg")" />
@@ -64,12 +64,6 @@
                         </span>
 
                     </div>
-
-                    <!-- Revive Button-->
-                    @if (item.HitPoint < unit.HitPoint)
-                    {
-                        <button class="btn-block btn-warning btn mt-3">Revive</button>
-                    }
 
                 </div>
 
