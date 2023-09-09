@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TheGame.Server.Data;
 
 namespace TheGame.Server.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230909134054_BattleWinnerInRequired")]
+    partial class BattleWinnerInRequired
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -57,6 +59,8 @@ namespace TheGame.Server.Migrations
                     b.HasIndex("AttackerId");
 
                     b.HasIndex("OpponentId");
+
+                    b.HasIndex("WinnerId");
 
                     b.ToTable("Battles");
                 });
@@ -160,9 +164,16 @@ namespace TheGame.Server.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.HasOne("TheGame.Shared.User", "Winner")
+                        .WithMany()
+                        .HasForeignKey("WinnerId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
                     b.Navigation("Attacker");
 
                     b.Navigation("Opponent");
+
+                    b.Navigation("Winner");
                 });
 
             modelBuilder.Entity("TheGame.Shared.UserUnit", b =>

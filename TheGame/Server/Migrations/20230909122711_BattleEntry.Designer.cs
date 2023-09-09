@@ -2,15 +2,17 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TheGame.Server.Data;
 
 namespace TheGame.Server.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230909122711_BattleEntry")]
+    partial class BattleEntry
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -25,9 +27,6 @@ namespace TheGame.Server.Migrations
                     b.Property<int>("AttackerDamage")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("AttackerHitpoint")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int>("AttackerId")
                         .HasColumnType("INTEGER");
 
@@ -38,9 +37,6 @@ namespace TheGame.Server.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("OpponentDamage")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("OpponentHitpoint")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("OpponentId")
@@ -57,6 +53,8 @@ namespace TheGame.Server.Migrations
                     b.HasIndex("AttackerId");
 
                     b.HasIndex("OpponentId");
+
+                    b.HasIndex("WinnerId");
 
                     b.ToTable("Battles");
                 });
@@ -160,9 +158,17 @@ namespace TheGame.Server.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
+                    b.HasOne("TheGame.Shared.User", "Winner")
+                        .WithMany()
+                        .HasForeignKey("WinnerId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.Navigation("Attacker");
 
                     b.Navigation("Opponent");
+
+                    b.Navigation("Winner");
                 });
 
             modelBuilder.Entity("TheGame.Shared.UserUnit", b =>
