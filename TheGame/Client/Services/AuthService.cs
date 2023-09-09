@@ -17,16 +17,16 @@ namespace TheGame.Client.Services
             _http = http;
         }
 
-        public async Task<AuthResponse<string>> Login(LoginData data)
+        public async Task<ServiceResponse<string>> Login(LoginData data)
         {
             var response = await _http.PostAsJsonAsync("api/auth/login", data);
-            return await response.Content.ReadFromJsonAsync<AuthResponse<string>>();
+            return await response.Content.ReadFromJsonAsync<ServiceResponse<string>>();
         }
 
-        public async Task<AuthResponse<int>> Register(RegisterData data)
+        public async Task<ServiceResponse<int>> Register(RegisterData data)
         {
             var response = await _http.PostAsJsonAsync("api/auth/register", data);
-            return await response.Content.ReadFromJsonAsync<AuthResponse<int>>();
+            return await response.Content.ReadFromJsonAsync<ServiceResponse<int>>();
         }
     }
 }

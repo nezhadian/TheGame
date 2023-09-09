@@ -8,7 +8,7 @@ namespace TheGame.Client.Services
 {
     public interface IAuthService
     {
-        Task<AuthResponse<string>> Login(LoginData data);
-        Task<AuthResponse<int>> Register(RegisterData data);
+        Task<ServiceResponse<string>> Login(LoginData data);
+        Task<ServiceResponse<int>> Register(RegisterData data);
     }
 }

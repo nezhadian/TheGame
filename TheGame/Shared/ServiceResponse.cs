@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TheGame.Shared
 {
-    public class AuthResponse<T>
+    public class ServiceResponse<T>
     {
         public bool IsSuccess { get; set; }
         public T Data { get; set; }

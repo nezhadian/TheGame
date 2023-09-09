@@ -8,8 +8,8 @@ namespace TheGame.Server.Data
 {
     public interface IAuthRepository
     {
-        Task<AuthResponse<string>> Login(string usernameOrEmail,string password);
-        Task<AuthResponse<int>> Register(User user,string password);
+        Task<ServiceResponse<string>> Login(string usernameOrEmail,string password);
+        Task<ServiceResponse<int>> Register(User user,string password);
         Task<bool> IsUserExists(string email,string username);
     }
 }

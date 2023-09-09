@@ -39,7 +39,11 @@ namespace TheGame.Server.Controllers
             var inProgressBattle = await battles.FirstOrDefaultAsync(b => !b.IsCompleted);
 
             if (inProgressBattle == null)
-                return NotFound("you are not in battle");
+                return Ok(new ServiceResponse<BattleProgress> {
+                    IsSuccess = false,
+                    Message = "you are not in battle"
+                });
+
 
             var battleProgress = new BattleProgress
             {
@@ -53,7 +57,10 @@ namespace TheGame.Server.Controllers
                 Rounds = inProgressBattle.Rounds,
             };
 
-            return Ok(battleProgress);
+            return Ok(new ServiceResponse<BattleProgress> {
+                IsSuccess = true,
+                Data = battleProgress
+            });
         }
 
         [HttpPost("start")]

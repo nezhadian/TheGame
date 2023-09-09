@@ -25,7 +25,7 @@ namespace TheGame.Server.Data
         }
 
         //
-        public async Task<AuthResponse<string>> Login(string usernameOrEmail, string password)
+        public async Task<ServiceResponse<string>> Login(string usernameOrEmail, string password)
         {
             string lowerUsernameOrEmail = usernameOrEmail.ToLower();
             var user = await _context.Users.FirstOrDefaultAsync(u =>
@@ -34,7 +34,7 @@ namespace TheGame.Server.Data
                 
             if(user == null)
             {
-                return new AuthResponse<string>
+                return new ServiceResponse<string>
                 {
                     IsSuccess = false,
                     Message = "this user is not exists"
@@ -42,7 +42,7 @@ namespace TheGame.Server.Data
 
             }else if (!IsCorrectPassword(user.PasswordHash, user.PasswordSalt, password))
             {
-                return new AuthResponse<string>
+                return new ServiceResponse<string>
                 {
                     IsSuccess = false,
                     Message = "wrong password"
@@ -50,7 +50,7 @@ namespace TheGame.Server.Data
             }
             else
             {
-                return new AuthResponse<string>
+                return new ServiceResponse<string>
                 {
                     IsSuccess = true,
                     Data = GenerateToken(user)
@@ -99,7 +99,7 @@ namespace TheGame.Server.Data
         }
 
         //
-        public async Task<AuthResponse<int>> Register(User user, string password)
+        public async Task<ServiceResponse<int>> Register(User user, string password)
         {
             var passwordHash = GenerateHash(password);
             user.PasswordHash = passwordHash.hash;
@@ -108,7 +108,7 @@ namespace TheGame.Server.Data
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            return new AuthResponse<int>
+            return new ServiceResponse<int>
             {
                 Data = user.Id,
                 IsSuccess = true,

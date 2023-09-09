@@ -25,7 +25,7 @@ namespace TheGame.Server.Controllers
         {
             if (await _auth.IsUserExists(data.Email, data.Username))
             {
-                return BadRequest(new AuthResponse<int>
+                return BadRequest(new ServiceResponse<int>
                 {
                     IsSuccess = false,
                     Message = "this email or username is used by another user"
