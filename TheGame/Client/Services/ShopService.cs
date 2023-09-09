@@ -36,10 +36,11 @@ namespace TheGame.Client.Services
 
         public async Task BuyNewItemAsync(int unitId)
         {
+            var unit = _userUnits.Units.First(u => u.Id == unitId);
             var response = await _http.PostAsJsonAsync("api/userunit/add", unitId);
             if (response.IsSuccessStatusCode)
             {
-                _toast.ShowSuccess(await response.Content.ReadAsStringAsync());
+                _toast.ShowSuccess($"Successfully added new {unit.Title}");
             }
             else
             {
