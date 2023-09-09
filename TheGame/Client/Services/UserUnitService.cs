@@ -27,7 +27,7 @@ namespace TheGame.Client.Services
 
         public async Task GetUserUnitsAsync()
         {
-            return;
+            UserUnits = await _http.GetFromJsonAsync<IList<UserUnit>>("api/userunit/getall");
         }
     }
 }
