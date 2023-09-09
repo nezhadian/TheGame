@@ -35,8 +35,7 @@ namespace TheGame.Client.Services
             }
             else
             {
-                _toast.ShowInfo(response.Message);
-                _navigation.NavigateTo("");
+                CurrentBattle = null;
             }
         }
 
