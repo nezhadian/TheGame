@@ -1,0 +1,52 @@
+﻿@page "/profile"
+@inject ILocalStorageService StorageService;
+@inject AuthenticationStateProvider AuthService;
+@inject NavigationManager NavigationService;
+@attribute [Authorize]
+
+
+<table class="table mt-3">
+    <tbody>
+        <tr>
+            <td>Id</td>
+            <td>@Id</td>
+        </tr>
+
+        <tr>
+            <td>Username</td>
+            <td>@Name</td>
+        </tr>
+
+        <tr>
+            <td>Email</td>
+            <td>@Email</td>
+        </tr>
+    </tbody>
+</table>
+
+<button class="mt-2 btn btn-danger" @onclick="Logout">Logout</button>
+
+@code {
+
+    public string Id { get; set; }
+    public string Name { get; set; }
+    public string Email { get; set; }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        var auth = await AuthService.GetAuthenticationStateAsync();
+        Id = auth.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value.ToString();
+        Name = auth.User.FindFirst(System.Security.Claims.ClaimTypes.Name).Value.ToString();
+        Email = auth.User.FindFirst(System.Security.Claims.ClaimTypes.Email).Value.ToString() ;
+
+    }
+
+    public async Task Logout()
+    {
+        await StorageService.RemoveItemAsync("token");
+        await AuthService.GetAuthenticationStateAsync();
+        NavigationService.NavigateTo("");
+    }
+
+}
