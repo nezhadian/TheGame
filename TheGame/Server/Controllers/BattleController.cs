@@ -133,7 +133,7 @@ namespace TheGame.Server.Controllers
             int round = battle.Rounds;
 
             //fight
-            for (int i = 0; i < 50 && attackerArmy.Count > 0 && opponentArmy.Count > 0; i++)
+            for (int i = 0; i < 10 && attackerArmy.Count > 0 && opponentArmy.Count > 0; i++)
             {
                 round++;
                 if (round % 2 == 0)
@@ -152,9 +152,14 @@ namespace TheGame.Server.Controllers
             {
                 FinishBattle(battle, opponentArmy.Count == 0, round);
             }
-            
 
-            return Ok(attacks);
+            await _context.Attacks.AddRangeAsync(attacks);
+            await _context.SaveChangesAsync();
+
+            return Ok(new BattleAttackResault {
+                IsCompleted = battle.IsCompleted,
+                Attacks = attacks
+            });
         }
 
         private static void FinishBattle(Battle battle, bool isAttackerWinner, int round)
