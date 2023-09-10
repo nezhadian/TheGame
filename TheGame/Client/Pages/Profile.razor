@@ -2,35 +2,27 @@
 @inject ILocalStorageService StorageService;
 @inject AuthenticationStateProvider AuthService;
 @inject NavigationManager NavigationService;
-@inject IBattleService BattleService;
 @attribute [Authorize]
 
 
-@if (BattleService.CurrentBattle == null)
-{
-    <table class="table mt-3">
-        <tbody>
-            <tr>
-                <td>Id</td>
-                <td>@Id</td>
-            </tr>
+<table class="table mt-3">
+    <tbody>
+        <tr>
+            <td>Id</td>
+            <td>@Id</td>
+        </tr>
 
-            <tr>
-                <td>Username</td>
-                <td>@Name</td>
-            </tr>
+        <tr>
+            <td>Username</td>
+            <td>@Name</td>
+        </tr>
 
-            <tr>
-                <td>Email</td>
-                <td>@Email</td>
-            </tr>
-        </tbody>
-    </table>
-}
-else
-{
-    <Battle />
-}
+        <tr>
+            <td>Email</td>
+            <td>@Email</td>
+        </tr>
+    </tbody>
+</table>
 
 <button class="mt-2 btn btn-danger" @onclick="Logout">Logout</button>
 

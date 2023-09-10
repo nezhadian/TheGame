@@ -1,0 +1,19 @@
+﻿@page "/history"
+@inject IBattleService BattleService;
+
+@if (BattleService.IsUserInBattle)
+{
+    <Battle />
+}
+else
+{
+    <span>you are not in battle</span>
+}
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await BattleService.GetCurrentBattle();
+    }
+
+}

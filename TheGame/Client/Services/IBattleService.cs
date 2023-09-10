@@ -10,8 +10,12 @@ namespace TheGame.Client.Services
     {
         public BattleProgress CurrentBattle { get; set; }
 
+        public int CurrentBattleId { get; set; }
+        public bool IsUserInBattle { get; set; }
+
         Task GetCurrentBattle();
         Task StartBattleAsync(int opponentId);
 
     }
 }
+

@@ -23,20 +23,17 @@ namespace TheGame.Client.Services
             _toast = toast;
         }
 
-        public BattleProgress CurrentBattle { get; set; } 
+        public BattleProgress CurrentBattle { get; set; }
+
+        public int CurrentBattleId { get; set; }
+        public bool IsUserInBattle { get; set; }
 
         public async Task GetCurrentBattle()
         {
-           var response = await _http.GetFromJsonAsync<ServiceResponse<BattleProgress>>("api/battle/getmybattle");
+           var response = await _http.GetFromJsonAsync<int>("api/battle/");
 
-            if (response.IsSuccess)
-            {
-                CurrentBattle = response.Data;
-            }
-            else
-            {
-                CurrentBattle = null;
-            }
+            CurrentBattleId = response;
+            IsUserInBattle = response != -1;
         }
 
         public Task StartBattleAsync(int opponentId)
