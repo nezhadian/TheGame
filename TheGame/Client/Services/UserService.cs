@@ -11,6 +11,7 @@ namespace TheGame.Client.Services
     public class UserService : IUserService
     {
         public IList<UserStatistcs> Leaderboard { get; set; } = new List<UserStatistcs>();
+        public IList<BattleHistoryEntry> History { get; set; }
 
         readonly HttpClient _http;
 
@@ -23,6 +24,12 @@ namespace TheGame.Client.Services
         {
             var response = await _http.GetFromJsonAsync<IList<UserStatistcs>>("api/user/leaderboard");
             Leaderboard = response;
+        }
+
+        public async Task GetHistoryAsync()
+        {
+            var response = await _http.GetFromJsonAsync<IList<BattleHistoryEntry>>("api/user/history");
+            History = response;
         }
     }
 }

@@ -57,5 +57,24 @@ namespace TheGame.Server.Controllers
 
             return Ok(leaderboard);
         }
+
+        [HttpGet("history")]
+        public async Task<IActionResult> GetHistory()
+        {
+            var user = await _utility.GetUser();
+            var battles = await _context.Battles
+                .Where(u => u.AttackerId == user.Id || u.OpponentId == user.Id)
+                .Include(u => u.Opponent)
+                .ToListAsync();
+
+            var history = battles.Select(b => new BattleHistoryEntry
+            {
+                BattleId = b.Id,
+                OpponentName = b.AttackerId == user.Id ? b.Opponent.Username : b.Attacker.Username,
+                YouWon = b.WinnerId == user.Id
+            });
+
+            return Ok(history);
+        }
     }
 }
