@@ -64,6 +64,7 @@ namespace TheGame.Server.Controllers
             var user = await _utility.GetUser();
             var battles = await _context.Battles
                 .Where(u => u.AttackerId == user.Id || u.OpponentId == user.Id)
+                .Include(u => u.Attacker)
                 .Include(u => u.Opponent)
                 .ToListAsync();
 
