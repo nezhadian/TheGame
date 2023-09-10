@@ -26,7 +26,7 @@ namespace TheGame.Server.Controllers
             _utility = utility;
         }
 
-        [HttpGet()]
+        [HttpPost]
         public async Task<IActionResult> Attack()
         {
             //find the battle
@@ -161,6 +161,25 @@ namespace TheGame.Server.Controllers
                 IsDead = a.IsUnitDead,
                 IsDefence = a.OpponentUnit.UserId == user.Id
             });
+        }
+
+
+        [HttpGet("log")]
+        public async Task<IActionResult> GetAllAttackForBattle([FromBody] int battleId)
+        {
+            var user = await _utility.GetUser();
+            var attacks = await _context.Attacks
+                        .Where(a => a.BattleId == battleId)
+                        .Include(a => a.Battle)
+                        .Where(a => a.Battle.AttackerId == user.Id || a.Battle.OpponentId == user.Id)
+                        .Include(a => a.AttackerUnit)
+                        .Include(a => a.OpponentUnit)
+                        .OrderByDescending(a => a.Round)
+                        .ToListAsync();
+
+            IEnumerable<AttackResault> attacksResault = AttackToAttackResault(user, attacks);
+
+            return Ok(attacksResault);
         }
     }
 }
