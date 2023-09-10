@@ -5,16 +5,21 @@
 @attribute [Authorize]
 
 <style>
-    .arrow-right {
+    :root {
+        --attack: green;
+        --defence: red;
+    }
+
+    .arrow-attack {
         float: left;
         position: relative;
-        background-color: #eee;
+        background-color: var(--attack);
         height: 2rem;
         width: 10rem;
         color: #555;
-        animation: arrow-right-anim 2s linear infinite;
+        animation: arrow-attack-anim 2s linear infinite;
     }
-        .arrow-right:after {
+        .arrow-attack:after {
             content: '';
             position: absolute;
             width: 3rem;
@@ -23,27 +28,27 @@
             right: -3rem;
             border-top: 1rem solid transparent;
             border-bottom: 1rem solid transparent;
-            border-left: 1rem solid #eee;
+            border-left: 1rem solid var(--attack);
         }
-        @@keyframes arrow-right-anim{
-            100%{
-                margin-left : 2rem;
-            }
+    @@keyframes arrow-attack-anim {
+        100% {
+            margin-left: 2rem;
         }
+    }
 
 
-    .arrow-left {
+    .arrow-defence {
         float: right;
         position: relative;
-        background-color: #eee;
+        background-color: var(--defence);
         height: 2rem;
         width: 10rem;
         color: #555;
-        align-self:flex-end;
-        animation: arrow-left-anim 2s linear infinite;
+        align-self: flex-end;
+        animation: arrow-defence-anim 2s linear infinite;
     }
 
-        .arrow-left:before {
+        .arrow-defence:before {
             content: '';
             position: absolute;
             width: 3rem;
@@ -52,10 +57,10 @@
             left: -3rem;
             border-top: 1rem solid transparent;
             border-bottom: 1rem solid transparent;
-            border-right: 1rem solid #eee;
+            border-right: 1rem solid var(--defence);
         }
 
-    @@keyframes arrow-left-anim {
+    @@keyframes arrow-defence-anim {
         100% {
             margin-right: 2rem;
         }
@@ -139,16 +144,16 @@ else
                 @if (item.IsDefence)
                 {
                     <div class="w-100 h-100 d-flex flex-column justify-content-center">
-                        <div class="arrow-left">
-                            <div class="py-1 w-100 text-center">@item.Damage</div>
+                        <div class="arrow-attack">
+                            <div class="py-1 w-100 text-center text-white">@item.Damage</div>
                         </div>
                     </div>
                 }
                 else
                 {
                     <div class="w-100 h-100 d-flex flex-column justify-content-center">
-                        <div class="arrow-right">
-                            <div class="py-1 w-100 text-center">@item.Damage</div>
+                        <div class="arrow-defence">
+                            <div class="py-1 w-100 text-center text-white">@item.Damage</div>
                         </div>
                     </div>
 
