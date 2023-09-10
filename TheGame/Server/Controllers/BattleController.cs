@@ -83,16 +83,16 @@ namespace TheGame.Server.Controllers
             var attackerHitpoint = await CalculateHitpoint(attacker.Id);
             var opponentHitpoint = await CalculateHitpoint(opponent.Id);
 
-            if(attackerHitpoint == 0)
+            if(attackerHitpoint <= 0)
                 return BadRequest($"you are not have alive army");
 
-            if (opponentHitpoint == 0)
+            if (opponentHitpoint <= 0)
                 return BadRequest($"Opponent ({opponent.Username}) is not have army");
 
             var battle = new Battle
             {
                 AttackerId = attacker.Id,
-                OpponentId = opponentId,
+                OpponentId = opponent.Id,
                 AttackerHitpoint = attackerHitpoint,
                 OpponentHitpoint = opponentHitpoint
             };
@@ -106,7 +106,7 @@ namespace TheGame.Server.Controllers
         public async Task<int> CalculateHitpoint(int userId)
         {
             var count = await _context.UserUnits
-                .Select(u => u.UserId == userId ? u.HitPoint :0).SumAsync();
+                .Select(u => u.UserId == userId ? u.HitPoint : 0).SumAsync();
 
             return count;
         }

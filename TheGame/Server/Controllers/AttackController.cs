@@ -119,7 +119,7 @@ namespace TheGame.Server.Controllers
             //damge
             var damage = rnd.Next(randomAttacker.Unit.Attack) - rnd.Next(randomOpponent.Unit.Defence);
 
-            damage = damage < 0 ? 0 : damage;
+            damage = Math.Max(0,damage);
             //log
 
             if (damage > randomOpponent.HitPoint)
@@ -142,7 +142,7 @@ namespace TheGame.Server.Controllers
             else
             {
                 //unit damaged
-                randomAttacker.HitPoint -= damage;
+                randomOpponent.HitPoint -= damage;
                 attacks.Add(new Attack
                 {
                     BattleId = battle.Id,
@@ -171,8 +171,8 @@ namespace TheGame.Server.Controllers
             return attacks.Select(a => new AttackResault
             {
                 Round = a.Round,
-                AttackerUnitId = a.AttackerUnit.UnitId,
-                OpponentUnitId = a.OpponentUnit.UnitId,
+                AttackerUnitId = a.OpponentUnit.UserId == user.Id ? a.OpponentUnit.UnitId : a.AttackerUnit.UnitId,
+                OpponentUnitId = a.OpponentUnit.UserId == user.Id ? a.AttackerUnit.UnitId : a.OpponentUnit.UnitId,
                 Damage = a.Damage,
                 IsDead = a.IsUnitDead,
                 IsDefence = a.OpponentUnit.UserId == user.Id
