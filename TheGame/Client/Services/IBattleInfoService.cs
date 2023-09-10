@@ -9,7 +9,7 @@ namespace TheGame.Client.Services
     public interface IBattleInfoService
     {
         public BattleProgress CurrentBattle { get; set; }
-        public IList<AttackResault> Attacks { get; set; }
+        public event Action OnChanged;
 
         Task GetBattleInfo(int battleId);
         Task ReloadCurrentBattle();

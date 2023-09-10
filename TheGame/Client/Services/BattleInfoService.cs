@@ -12,7 +12,6 @@ namespace TheGame.Client.Services
     public class BattleInfoService : IBattleInfoService
     {
         readonly HttpClient _http;
-        readonly IAttackService _attack;
         readonly IToastService _toast;
 
         public BattleInfoService(HttpClient http, IToastService toast)
@@ -22,7 +21,8 @@ namespace TheGame.Client.Services
         }
 
         public BattleProgress CurrentBattle { get; set; } = new BattleProgress();
-        public IList<AttackResault> Attacks { get; set; } = new List<AttackResault>();
+
+        public event Action OnChanged;
 
         public async Task GetBattleInfo(int battleId)
         {
@@ -30,8 +30,7 @@ namespace TheGame.Client.Services
             if (response.IsSuccessStatusCode)
             {
                 CurrentBattle = await response.Content.ReadFromJsonAsync<BattleProgress>();
-                await _attack.GetLog(CurrentBattle.BattleId);
-                Attacks = _attack.Attacks;
+                OnChanged?.Invoke();
             }
             else
             {
