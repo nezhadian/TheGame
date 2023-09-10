@@ -22,10 +22,28 @@ namespace TheGame.Client.Services
         }
 
         public IList<AttackResault> Attacks { get; set; } = new List<AttackResault>();
+        public event Action OnChanged;
 
-        public async Task Fight()
-        {            
-            throw new NotImplementedException();
+        public async Task<bool> Attack()
+        {
+            var response = await _http.GetFromJsonAsync<ServiceResponse<BattleAttackResault>>("api/attack");
+
+            if (response.IsSuccess)
+            {
+                Attacks = response.Data.Attacks
+                    .Concat(Attacks)
+                    .OrderByDescending(u => u.Round)
+                    .ToList();
+
+                OnChanged?.Invoke();
+
+                return response.Data.IsCompleted;
+            }
+            else
+            {
+                _toast.ShowInfo(response.Message);
+            }
+            return false;
         }
 
         public async Task GetLog(int battleId)

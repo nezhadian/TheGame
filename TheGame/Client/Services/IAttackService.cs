@@ -9,8 +9,9 @@ namespace TheGame.Client.Services
     public interface IAttackService
     {
         public IList<AttackResault> Attacks { get; set; }
+        public event Action OnChanged;
 
-        Task Fight();
+        Task<bool> Attack();
         Task GetLog(int battleId);
 
     }
