@@ -30,6 +30,7 @@ namespace TheGame.Client
             builder.Services.AddScoped<IUserUnitService, UserUnitService>();
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IBattleService, BattleService>();
+            builder.Services.AddScoped<IAttackService, AttackService>();
 
             //blazored
             builder.Services.AddBlazoredLocalStorage();
