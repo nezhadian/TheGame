@@ -115,14 +115,18 @@ namespace TheGame.Server.Controllers
         public async Task<IActionResult> GetBattleInfo([FromBody] int battleId)
         {
             var user = await _utility.GetUser();
-            var battle = await _context.Battles
+            var battles = await _context.Battles
                 .Where(b => b.Id == battleId)
                 .Include(b => b.Attacker)
                 .Include(b => b.Opponent)
-                .FirstAsync();
+                .ToListAsync();
 
-            if(battle == null)
+            
+
+            if(battles.Count <= 0)
                 return BadRequest("this battleid isn`t exists");
+
+            var battle = battles[0];
 
             var battleProgress = new BattleProgress
             {
