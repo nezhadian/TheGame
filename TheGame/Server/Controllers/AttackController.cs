@@ -85,14 +85,23 @@ namespace TheGame.Server.Controllers
         private static void FinishBattle(Battle battle, bool isAttackerWinner, int round)
         {
 
+            battle.Attacker.Battles++;
+            battle.Opponent.Battles++;
+
             if (isAttackerWinner)
             {
+                battle.Attacker.Victories++;
+                battle.Opponent.Defeats++;
+
                 battle.WinnerId = battle.AttackerId;
                 battle.Attacker.TotalCosts += battle.OpponentDamage;
                 battle.Opponent.TotalCosts += battle.AttackerDamage * 10;
             }
             else
             {
+                battle.Opponent.Victories++;
+                battle.Attacker.Defeats++;
+
                 battle.WinnerId = battle.OpponentId;
                 battle.Opponent.TotalCosts += battle.AttackerDamage;
                 battle.Attacker.TotalCosts += battle.OpponentDamage * 10;

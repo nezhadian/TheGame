@@ -26,7 +26,7 @@ namespace TheGame.Server.Controllers
             _context = context;
         }
 
-        [HttpGet("getmybattle")]
+        [HttpGet("current")]
         public async Task<IActionResult> GetUserBattle()
         {
             var battle = await _utility.GetInProgressUserBattle();
@@ -48,12 +48,24 @@ namespace TheGame.Server.Controllers
                 AttackerDamage = battle.AttackerDamage,
                 OpponentDamage = battle.OpponentDamage,
                 Rounds = battle.Rounds,
+                IsAttackerWinner = null,
+                YouWon = null,
+                IsCompleted = false
             };
 
             return Ok(new ServiceResponse<BattleProgress> {
                 IsSuccess = true,
                 Data = battleProgress
             });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetInProgressBattleId()
+        {
+            var battle = await _utility.GetInProgressUserBattle();
+
+            return Ok(battle == null ? -1 : battle.Id);
+
         }
 
         [HttpPost("start")]
@@ -94,19 +106,50 @@ namespace TheGame.Server.Controllers
                 AttackerName = attacker.Username,
                 OpponentName = opponent.Username,
                 AttackerHitpoint = attackerHitpoint,
-                OpponentHitpoint = opponentHitpoint
+                OpponentHitpoint = opponentHitpoint,
+                IsCompleted = false
             };
 
             return Ok(battleProgress);
 
         }
-
         public async Task<int> CalculateHitpoint(int userId)
         {
             var count = await _context.UserUnits
                 .Select(u => u.UserId == userId ? u.HitPoint :0).SumAsync();
 
             return count;
+        }
+
+        [HttpGet("info")]
+        public async Task<IActionResult> GetBattleInfo([FromBody] int battleId)
+        {
+            var user = await _utility.GetUser();
+            var battle = await _context.Battles
+                .Where(b => b.Id == battleId)
+                .Include(b => b.Attacker)
+                .Include(b => b.Opponent)
+                .FirstAsync();
+
+            if(battle == null)
+                return BadRequest("this battle id isn`t exists");
+
+            var battleProgress = new BattleProgress
+            {
+                BattleId = battle.Id,
+                AttackerName = battle.Attacker.Username,
+                OpponentName = battle.Opponent.Username,
+                AttackerHitpoint = battle.AttackerHitpoint,
+                OpponentHitpoint = battle.OpponentHitpoint,
+                AttackerDamage = battle.AttackerDamage,
+                OpponentDamage = battle.OpponentDamage,
+                Rounds = battle.Rounds,
+                IsAttackerWinner = battle.IsCompleted ? battle?.WinnerId == battle.AttackerId : null,
+                YouWon = battle.IsCompleted ? battle?.WinnerId == user.Id : null,
+                IsCompleted = battle.IsCompleted
+            };
+
+            return Ok(battleProgress);
         }
 
     }

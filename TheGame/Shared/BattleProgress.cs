@@ -20,6 +20,11 @@ namespace TheGame.Shared
 
         public int Rounds { get; set; }
 
+        public bool IsCompleted { get; set; }
+        public bool? IsAttackerWinner { get; set; }
+        public bool? YouWon { get; set; }
+
+
 
     }
 }
