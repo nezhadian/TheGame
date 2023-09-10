@@ -84,7 +84,7 @@ namespace TheGame.Server.Controllers
             var opponentHitpoint = await CalculateHitpoint(opponent.Id);
 
             if(attackerHitpoint == 0)
-                return BadRequest($"Attacker ({attacker.Username}) is not have army");
+                return BadRequest($"you are not have alive army");
 
             if (opponentHitpoint == 0)
                 return BadRequest($"Opponent ({opponent.Username}) is not have army");
@@ -100,17 +100,7 @@ namespace TheGame.Server.Controllers
             _context.Battles.Add(battle);
             await _context.SaveChangesAsync();
 
-            var battleProgress = new BattleProgress
-            {
-                BattleId = battle.Id,
-                AttackerName = attacker.Username,
-                OpponentName = opponent.Username,
-                AttackerHitpoint = attackerHitpoint,
-                OpponentHitpoint = opponentHitpoint,
-                IsCompleted = false
-            };
-
-            return Ok(battleProgress);
+            return Ok(opponent.Username);
 
         }
         public async Task<int> CalculateHitpoint(int userId)
@@ -121,7 +111,7 @@ namespace TheGame.Server.Controllers
             return count;
         }
 
-        [HttpGet("info")]
+        [HttpPost("info")]
         public async Task<IActionResult> GetBattleInfo([FromBody] int battleId)
         {
             var user = await _utility.GetUser();
@@ -132,7 +122,7 @@ namespace TheGame.Server.Controllers
                 .FirstAsync();
 
             if(battle == null)
-                return BadRequest("this battle id isn`t exists");
+                return BadRequest("this battleid isn`t exists");
 
             var battleProgress = new BattleProgress
             {
