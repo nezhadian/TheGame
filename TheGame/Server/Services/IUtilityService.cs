@@ -10,6 +10,8 @@ namespace TheGame.Server.Services
     {
         Task<User> GetUser();
 
+        Task<Battle> GetInProgressUserBattle();
+
         Task<bool> IsUserInBattle();
 
         Task<bool> IsInBattle(int userId);

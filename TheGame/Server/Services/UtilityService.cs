@@ -45,5 +45,17 @@ namespace TheGame.Server.Services
                 u => !u.IsCompleted &&
                 (u.AttackerId == userId || u.OpponentId == userId));
         }
+
+        public async Task<Battle> GetInProgressUserBattle()
+        {
+            var userId = GetUserId();
+
+            var battles = _context.Battles
+                .Where(u => u.AttackerId == userId || u.OpponentId == userId)
+                .Include(u => u.Attacker)
+                .Include(u => u.Opponent);
+
+            return await battles.FirstOrDefaultAsync(b => !b.IsCompleted);
+        }
     }
 }
