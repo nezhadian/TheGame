@@ -9,6 +9,6 @@ namespace TheGame.Shared
     public class BattleAttackResault
     {
         public bool IsCompleted { get; set; }
-        public IList<Attack> Attacks { get; set; }
+        public IList<AttackResault> Attacks { get; set; }
     }
 }
