@@ -2,6 +2,7 @@
 @inject IBattleService BattleService;
 @inject IToastService ToastService;
 @inject IUserService UserService;
+@attribute [Authorize]
 
 @if (BattleService.IsUserInBattle)
 {
@@ -15,32 +16,42 @@ else
     }
     else
     {
-        <div>
-            <div>
-                <ul class="list-group">
-                    @foreach (BattleHistoryEntry item in UserService.History)
+        <div class="row">
+            <div class="col-4">
+                
+            <ul class="list-group">
+                @foreach (BattleHistoryEntry item in UserService.History)
+                {
+                    if (item.YouWon)
                     {
-                        if (item.YouWon)
-                        {
-                            <li class="list-group-item list-group-item-success">
-                                @item.OpponentName
-                            </li>
-                        }
-                        else
-                        {
-                            <li class="list-group-item list-group-item-danger">
-                                @item.OpponentName
-                            </li>
-                        }
+                        <li @onclick="() => OnItemSelect(item.BattleId)" 
+                            class="list-group-item list-group-item-success list-group-item-action @(SelectedBattleId == item.BattleId ? "active": "")">
+                            @item.OpponentName
+                        </li>
                     }
-                </ul>
+                    else
+                    {
+                        <li @onclick="() => OnItemSelect(item.BattleId)" 
+                            class="list-group-item list-group-item-danger list-group-item-action @(SelectedBattleId == item.BattleId ? "active": "")">
+                            @item.OpponentName
+                        </li>
+                    }
+                }
+            </ul>
+   
             </div>
-            <div></div>
+            <div class="col-8">
+                <Battle BattleId="@SelectedBattleId"/>
+            </div>
         </div>
+
     }
 }
 
 @code {
+
+    public int SelectedBattleId { get; set; }
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -51,5 +62,10 @@ else
     public void BattleCompleted()
     {
         StateHasChanged();
+    }
+
+    public void OnItemSelect(int battleId)
+    {
+        SelectedBattleId = battleId;
     }
 }
