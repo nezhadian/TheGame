@@ -26,7 +26,7 @@ namespace TheGame.Server.Controllers
             _utility = utility;
         }
 
-        [HttpPost]
+        [HttpGet]
         public async Task<IActionResult> Attack()
         {
             //find the battle
@@ -34,7 +34,10 @@ namespace TheGame.Server.Controllers
             var battle = await _utility.GetInProgressUserBattle();
 
             if (battle == null)
-                return BadRequest("you are not in battle");
+                return BadRequest(new ServiceResponse<BattleAttackResault> {
+                    IsSuccess = false,
+                    Message = "you are not in battle"
+                });
 
 
             //declare vars
@@ -69,10 +72,14 @@ namespace TheGame.Server.Controllers
             await _context.Attacks.AddRangeAsync(attacks);
             await _context.SaveChangesAsync();
 
-            return Ok(new BattleAttackResault
+            return Ok(new ServiceResponse<BattleAttackResault>
             {
-                IsCompleted = battle.IsCompleted,
-                Attacks = AttackToAttackResault(user, attacks).ToList()
+                IsSuccess = true,
+                Data = new BattleAttackResault
+                {
+                    IsCompleted = battle.IsCompleted,
+                    Attacks = AttackToAttackResault(user, attacks).ToList()
+                }
             });
         }
         private static void FinishBattle(Battle battle, bool isAttackerWinner, int round)
@@ -164,7 +171,7 @@ namespace TheGame.Server.Controllers
         }
 
 
-        [HttpGet("log")]
+        [HttpPost("log")]
         public async Task<IActionResult> GetAllAttackForBattle([FromBody] int battleId)
         {
             var user = await _utility.GetUser();
