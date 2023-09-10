@@ -20,7 +20,7 @@ namespace TheGame.Client.Services
             _toast = toast;
         }
 
-        public BattleProgress CurrentBattle { get; set; } = new BattleProgress();
+        public BattleProgress CurrentBattle { get; set; } = null;
 
         public event Action OnChanged;
 
@@ -31,10 +31,6 @@ namespace TheGame.Client.Services
             {
                 CurrentBattle = await response.Content.ReadFromJsonAsync<BattleProgress>();
                 OnChanged?.Invoke();
-            }
-            else
-            {
-                _toast.ShowError(await response.Content.ReadAsStringAsync());
             }
             
         }
