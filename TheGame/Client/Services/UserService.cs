@@ -11,7 +11,7 @@ namespace TheGame.Client.Services
     public class UserService : IUserService
     {
         public IList<UserStatistcs> Leaderboard { get; set; } = new List<UserStatistcs>();
-        public IList<BattleHistoryEntry> History { get; set; }
+        public IList<BattleHistoryEntry> History { get; set; } = new List<BattleHistoryEntry>();
 
         readonly HttpClient _http;
 

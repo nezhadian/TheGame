@@ -1,6 +1,7 @@
 ﻿@page "/history"
 @inject IBattleService BattleService;
 @inject IToastService ToastService;
+@inject IUserService UserService;
 
 @if (BattleService.IsUserInBattle)
 {
@@ -8,7 +9,35 @@
 }
 else
 {
-    <span>you are not in battle</span>
+    @if (UserService.History.Count == 0)
+    {
+        <span>Loading History</span>
+    }
+    else
+    {
+        <div>
+            <div>
+                <ul class="list-group">
+                    @foreach (BattleHistoryEntry item in UserService.History)
+                    {
+                        if (item.YouWon)
+                        {
+                            <li class="list-group-item list-group-item-success">
+                                @item.OpponentName
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="list-group-item list-group-item-danger">
+                                @item.OpponentName
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+            <div></div>
+        </div>
+    }
 }
 
 @code {
@@ -16,6 +45,7 @@ else
     protected override async Task OnInitializedAsync()
     {
         await BattleService.GetCurrentBattle();
+        await UserService.GetHistoryAsync();
     }
 
     public void BattleCompleted()
