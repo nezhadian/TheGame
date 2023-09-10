@@ -1,9 +1,10 @@
 ﻿@page "/history"
 @inject IBattleService BattleService;
+@inject IToastService ToastService;
 
 @if (BattleService.IsUserInBattle)
 {
-    <Battle />
+    <Battle BattleId="@BattleService.CurrentBattleId" OnBattleCompleted="BattleCompleted" />
 }
 else
 {
@@ -11,9 +12,14 @@ else
 }
 
 @code {
+
     protected override async Task OnInitializedAsync()
     {
         await BattleService.GetCurrentBattle();
     }
 
+    public void BattleCompleted()
+    {
+        StateHasChanged();
+    }
 }
