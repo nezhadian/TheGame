@@ -1,6 +1,68 @@
 ﻿@page "/battle"
 @inject IBattleService BattleService
+@inject IAttackService AttackService
+@inject IUserUnitService UserUnitService
 @attribute [Authorize]
+
+<style>
+    .arrow-right {
+        float: left;
+        position: relative;
+        background-color: #eee;
+        height: 2rem;
+        width: 10rem;
+        color: #555;
+        animation: arrow-right-anim 2s linear infinite;
+    }
+        .arrow-right:after {
+            content: '';
+            position: absolute;
+            width: 3rem;
+            height: 2rem;
+            top: 0;
+            right: -3rem;
+            border-top: 1rem solid transparent;
+            border-bottom: 1rem solid transparent;
+            border-left: 1rem solid #eee;
+        }
+        @@keyframes arrow-right-anim{
+            100%{
+                margin-left : 2rem;
+            }
+        }
+
+
+    .arrow-left {
+        float: right;
+        position: relative;
+        background-color: #eee;
+        height: 2rem;
+        width: 10rem;
+        color: #555;
+        align-self:flex-end;
+        animation: arrow-left-anim 2s linear infinite;
+    }
+
+        .arrow-left:before {
+            content: '';
+            position: absolute;
+            width: 3rem;
+            height: 2rem;
+            top: 0;
+            left: -3rem;
+            border-top: 1rem solid transparent;
+            border-bottom: 1rem solid transparent;
+            border-right: 1rem solid #eee;
+        }
+
+    @@keyframes arrow-left-anim {
+        100% {
+            margin-right: 2rem;
+        }
+    }
+
+
+</style>
 
 @if (BattleService.CurrentBattle == null)
 {
@@ -27,7 +89,7 @@ else
 
             <!--Progress-->
             <div class="progress w-100">
-                <div class="progress-bar bg-warning" 
+                <div class="progress-bar bg-warning"
                      style="width:@(CalulatePercentage(BattleService.CurrentBattle.AttackerDamage,BattleService.CurrentBattle.AttackerHitpoint))%"></div>
             </div>
 
@@ -35,12 +97,12 @@ else
 
         <!--Vs Text-->
         <h3 class="font-italic text-muted">VS</h3>
-    
+
         <!--Opponent-->
         <div class="d-flex flex-column align-items-center">
             <!--Avatar-->
             <div class="rounded-circle bg-light text-white text-center" style="width:10rem;height:10rem"></div>
-            
+
             <!--Username-->
             <h4 class="mt-3">@BattleService.CurrentBattle.OpponentName</h4>
 
@@ -52,15 +114,72 @@ else
 
             <!--Progress-->
             <div class="progress w-100">
-                <div class="progress-bar bg-warning" 
+                <div class="progress-bar bg-warning"
                      style="width:@(CalulatePercentage(BattleService.CurrentBattle.OpponentDamage,BattleService.CurrentBattle.OpponentHitpoint))%"></div>
             </div>
         </div>
+
+    </div>
+
+    <!--Rounds Count Text-->
+    <h3 class="mt-4 text-center">Round @BattleService.CurrentBattle.Rounds</h3>
+
+    <!--Rounds -->
+    <div>
+        @foreach (AttackResault item in AttackService.Attacks)
+        {
+        <div class="row w-75 mx-auto my-1">
+            <!--Attacker Avatar-->
+            <div class="col-3">
+                <img class="w-100" src="@GetImagePath(item.AttackerUnitId)" />
+            </div>
+
+            <!--Damage-->
+            <div class="col-6">
+                @if (item.IsDefence)
+                {
+                    <div class="w-100 h-100 d-flex flex-column justify-content-center">
+                        <div class="arrow-left">
+                            <div class="py-1 w-100 text-center">@item.Damage</div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="w-100 h-100 d-flex flex-column justify-content-center">
+                        <div class="arrow-right">
+                            <div class="py-1 w-100 text-center">@item.Damage</div>
+                        </div>
+                    </div>
+
+                }
+            </div>
+
+            <!--Opponent Avatar-->
+            <div class="col-3">
+                <img class="w-100" src="@GetImagePath(item.OpponentUnitId)" />
+            </div>
+
+        </div>
+        }
     </div>
 }
-@code { 
-    public double CalulatePercentage(int value,int total)
+@code {
+
+    protected override async Task OnInitializedAsync()
+    {
+        await AttackService.GetLog(2);
+        await UserUnitService.GetUnitsAsync();
+    }
+
+    public double CalulatePercentage(int value, int total)
     {
         return 100 - ((double)value / total) * 100;
+    }
+
+    public string GetImagePath(int unitId)
+    {
+        var unit = UserUnitService.Units.FirstOrDefault(u => u.Id == unitId);
+        return $"images/{unit.Title}.jpeg";
     }
 }
