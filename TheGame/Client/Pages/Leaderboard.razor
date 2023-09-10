@@ -1,5 +1,6 @@
 ﻿@page "/leaderboard"
 @inject IUserService UserService;
+@inject IBattleService BattleService;
 @inject AuthenticationStateProvider AuthService;
 @attribute [Authorize]
 
@@ -44,7 +45,7 @@ else
                 <td>
                     @if (user.UserId != MyUserId)
                     {
-                        <button class="btn btn-primary rounded-0 w-100">Fight</button>
+                        <button class="btn btn-primary rounded-0 w-100" @onclick="() => StartFight(user.UserId)">Fight</button>
                     }
                     else
                     {
@@ -70,4 +71,8 @@ else
         MyUserId = int.Parse(auth.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value);
     }
 
+    public async Task StartFight(int opponentId)
+    {
+        await BattleService.StartBattleAsync(opponentId);
+    }
 }
