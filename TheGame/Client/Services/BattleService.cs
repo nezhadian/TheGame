@@ -28,7 +28,7 @@ namespace TheGame.Client.Services
         public int CurrentBattleId { get; set; }
         public bool IsUserInBattle { get; set; }
 
-        public async Task GetCurrentBattle()
+        public async Task GetCurrentBattleId()
         {
            var response = await _http.GetFromJsonAsync<int>("api/battle/");
 
@@ -43,12 +43,12 @@ namespace TheGame.Client.Services
             {
                 _toast.ShowSuccess($"Battle Started with {await response.Content.ReadAsStringAsync()}");
                 _navigation.NavigateTo("/history");
-                await GetCurrentBattle();
+                await GetCurrentBattleId();
             }
             else
             {
                 _toast.ShowInfo(await response.Content.ReadAsStringAsync());
-                await GetCurrentBattle();
+                await GetCurrentBattleId();
             }
         }
     }

@@ -27,38 +27,6 @@ namespace TheGame.Server.Controllers
             _context = context;
         }
 
-        [HttpPost("add")]
-        public async Task<IActionResult> AddUnit([FromBody]int unitId)
-        {
-            var unit = await _context.Units.FindAsync(unitId);
-            if (unit == null)
-                return BadRequest("this unit is not exists");
-
-            var user = await _utility.GetUser();
-
-            if(user.TotalCosts < unit.Cost)
-            {
-                return NotFound("you do not have enough money");
-            }
-            if(await _utility.IsUserInBattle())
-            {
-                return BadRequest("during a battle you can`t buy new items");
-            }
-
-            user.TotalCosts -= unit.Cost;
-            var userUnit = new UserUnit
-            {
-                UnitId = unit.Id,
-                UserId = user.Id,
-                HitPoint = unit.HitPoint
-            };
-
-            _context.UserUnits.Add(userUnit);
-
-            await _context.SaveChangesAsync();
-
-            return Ok(userUnit);
-        }
         [HttpGet("getall")]
         public async Task<IActionResult> GetUserUnits()
         {
@@ -73,6 +41,44 @@ namespace TheGame.Server.Controllers
                 .ToListAsync();
 
             return Ok(userUnits);
+        }
+
+        [HttpPost("revive")]
+        public async Task<IActionResult> ReviveAllUnits()
+        {
+            var user = await _utility.GetUser();
+
+            var reviveDollars = 1000;
+
+            if (user.TotalCosts < reviveDollars)
+            {
+                return BadRequest("you do not have enough money for revive(1000$)");
+            }
+
+            var units = await _context.UserUnits
+                .Where(u => u.UserId == user.Id)
+                .Include(u => u.Unit)
+                .ToListAsync();
+
+            Random rnd = new Random();
+            bool isAnyRevived = false;
+            foreach (var unit in units)
+            {
+                //is dead
+                if (unit.HitPoint <= 0)
+                {
+                    isAnyRevived = true;
+                    unit.HitPoint = rnd.Next(unit.Unit.HitPoint);
+                }
+            }
+
+            if (!isAnyRevived)
+                return Ok("all your armies still alive ");
+
+
+            user.TotalCosts -= reviveDollars;
+            await _context.SaveChangesAsync();
+            return Ok("you armies revived");
         }
 
     }

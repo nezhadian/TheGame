@@ -26,13 +26,6 @@ namespace TheGame.Server.Controllers
             _context = context;
         }
 
-        [HttpGet("costs")]
-        public async Task<IActionResult> GetCosts()
-        {
-            var user = await _utility.GetUser();
-            return Ok(user.TotalCosts);
-        }
-
         [HttpGet("leaderboard")]
         public async Task<IActionResult> GetLeaderboard()
         {

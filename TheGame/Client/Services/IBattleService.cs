@@ -8,12 +8,10 @@ namespace TheGame.Client.Services
 {
     public interface IBattleService
     {
-        public BattleProgress CurrentBattle { get; set; }
-
         public int CurrentBattleId { get; set; }
         public bool IsUserInBattle { get; set; }
 
-        Task GetCurrentBattle();
+        Task GetCurrentBattleId();
         Task StartBattleAsync(int opponentId);
 
     }

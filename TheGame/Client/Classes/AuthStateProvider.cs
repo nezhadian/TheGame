@@ -41,7 +41,7 @@ namespace TheGame.Client.Classes
                     _http.DefaultRequestHeaders.Authorization =
                         new AuthenticationHeaderValue("Bearer",token.Replace("\"",""));
                     await _shopService.GetCostsAsync();
-                    await _battle.GetCurrentBattle();
+                    await _battle.GetCurrentBattleId();
                 }
                 catch
                 {

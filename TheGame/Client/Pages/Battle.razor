@@ -222,7 +222,7 @@
             _battleId = value;
             BattleInfoService.GetBattleInfo(value);
             AttackService.GetLog(value);
-            BattleService.GetCurrentBattle();
+            BattleService.GetCurrentBattleId();
 
         }
     }
@@ -254,7 +254,7 @@
         await BattleInfoService.ReloadCurrentBattle();
         if(isBattleCompleted)
         {
-            await BattleService.GetCurrentBattle();
+            await BattleService.GetCurrentBattleId();
             if (BattleInfoService.CurrentBattle.YouWon == true)
             {
                 ToastService.ShowSuccess("You Won~");

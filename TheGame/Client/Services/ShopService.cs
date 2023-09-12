@@ -30,14 +30,14 @@ namespace TheGame.Client.Services
 
         public async Task GetCostsAsync()
         {
-            Costs = await _http.GetFromJsonAsync<int>("api/user/costs");
+            Costs = await _http.GetFromJsonAsync<int>("api/shop/costs");
             RaiseOnChanged();
         }
 
         public async Task BuyNewItemAsync(int unitId)
         {
             var unit = _userUnits.Units.First(u => u.Id == unitId);
-            var response = await _http.PostAsJsonAsync("api/userunit/add", unitId);
+            var response = await _http.PostAsJsonAsync("api/shop/buy", unitId);
             if (response.IsSuccessStatusCode)
             {
                 _toast.ShowSuccess($"Successfully added new {unit.Title}");

@@ -181,7 +181,7 @@ namespace TheGame.Server.Controllers
 
 
         [HttpPost("log")]
-        public async Task<IActionResult> GetAllAttackForBattle([FromBody] int battleId)
+        public async Task<IActionResult> GetLog([FromBody] int battleId)
         {
             var user = await _utility.GetUser();
             var attacks = await _context.Attacks

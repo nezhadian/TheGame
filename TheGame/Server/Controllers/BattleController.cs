@@ -26,39 +26,6 @@ namespace TheGame.Server.Controllers
             _context = context;
         }
 
-        [HttpGet("current")]
-        public async Task<IActionResult> GetUserBattle()
-        {
-            var battle = await _utility.GetInProgressUserBattle();
-
-            if (battle == null)
-                return Ok(new ServiceResponse<BattleProgress> {
-                    IsSuccess = false,
-                    Message = "you are not in battle"
-                });
-
-
-            var battleProgress = new BattleProgress
-            {
-                BattleId = battle.Id,
-                AttackerName = battle.Attacker.Username,
-                OpponentName = battle.Opponent.Username,
-                AttackerHitpoint = battle.AttackerHitpoint,
-                OpponentHitpoint = battle.OpponentHitpoint,
-                AttackerDamage = battle.AttackerDamage,
-                OpponentDamage = battle.OpponentDamage,
-                Rounds = battle.Rounds,
-                IsAttackerWinner = null,
-                YouWon = null,
-                IsCompleted = false
-            };
-
-            return Ok(new ServiceResponse<BattleProgress> {
-                IsSuccess = true,
-                Data = battleProgress
-            });
-        }
-
         [HttpGet]
         public async Task<IActionResult> GetInProgressBattleId()
         {

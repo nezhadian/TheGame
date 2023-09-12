@@ -13,6 +13,6 @@ namespace TheGame.Client.Services
 
         Task GetUnitsAsync();
         Task GetUserUnitsAsync();
-
+        Task ReviveAllUnitsAsync();
     }
 }
