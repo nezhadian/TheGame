@@ -4,6 +4,7 @@
 @attribute [Authorize];
 
 
+<button class="btn btn-warning py-3" @onclick="ReviveAll">Revive All Units 1000$</button>
 
 @foreach (Unit unit in UserUnitService.Units)
 {
@@ -25,7 +26,8 @@
             <div class="card my-3 ml-2" style="width:12rem;flex:0 0 auto">
                 <!-- Card Image-->
                 <div class="card-img-top w-100">
-                    <img class="w-100" src="images/@(unit.Title + ".jpeg")" />
+                    <img class="w-100 float-left" src="images/@(unit.Title + ".jpeg")" />
+                    
                 </div>
 
                 <div class="p-3">
@@ -63,6 +65,13 @@
                             <span class="font-weight-bold">@unit.HitPoint</span>
                         </span>
 
+                        <span class="card-text d-flex w-100 justify-content-between">
+                            <span class="text-danger">
+                                <span class="oi oi-heart"></span>
+                                Health
+                            </span>
+                            <span class="font-weight-bold">@item.HitPoint/@unit.HitPoint</span>
+                        </span>
                     </div>
 
                 </div>
@@ -91,5 +100,12 @@
     public async Task BuyNewItem(int unitId)
     {
         await ShopService.BuyNewItemAsync(unitId);
+    }
+
+    public async Task ReviveAll()
+    {
+        await UserUnitService.ReviveAllUnitsAsync();
+        await ShopService.GetCostsAsync();
+
     }
 }
