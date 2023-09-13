@@ -1,5 +1,4 @@
 ﻿@page "/battle"
-@inject IBattleService BattleService;
 @inject IBattleInfoService BattleInfoService
 @inject IAttackService AttackService
 @inject IUserUnitService UserUnitService
@@ -222,7 +221,6 @@
             _battleId = value;
             BattleInfoService.GetBattleInfo(value);
             AttackService.GetLog(value);
-            BattleService.GetCurrentBattleId();
 
         }
     }
@@ -254,10 +252,9 @@
         await BattleInfoService.ReloadCurrentBattle();
         if(isBattleCompleted)
         {
-            await BattleService.GetCurrentBattleId();
             if (BattleInfoService.CurrentBattle.YouWon == true)
             {
-                ToastService.ShowSuccess("You Won~");
+                ToastService.ShowSuccess("You Won!!!");
             }
             else
             {

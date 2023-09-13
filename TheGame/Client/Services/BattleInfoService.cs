@@ -12,12 +12,10 @@ namespace TheGame.Client.Services
     public class BattleInfoService : IBattleInfoService
     {
         readonly HttpClient _http;
-        readonly IToastService _toast;
 
-        public BattleInfoService(HttpClient http, IToastService toast)
+        public BattleInfoService(HttpClient http)
         {
             _http = http;
-            _toast = toast;
         }
 
         public BattleProgress CurrentBattle { get; set; } = null;
@@ -31,6 +29,10 @@ namespace TheGame.Client.Services
             {
                 CurrentBattle = await response.Content.ReadFromJsonAsync<BattleProgress>();
                 OnChanged?.Invoke();
+            }
+            else
+            {
+                CurrentBattle = null;
             }
             
         }

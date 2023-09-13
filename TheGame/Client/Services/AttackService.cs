@@ -35,8 +35,7 @@ namespace TheGame.Client.Services
                     .OrderByDescending(u => u.Round)
                     .ToList();
 
-                OnChanged?.Invoke();
-
+                RaiseOnChanged();
                 return response.Data.IsCompleted;
             }
             else
@@ -53,11 +52,18 @@ namespace TheGame.Client.Services
             if (response.IsSuccessStatusCode)
             {
                 Attacks = await response.Content.ReadFromJsonAsync<IList<AttackResault>>();
+                RaiseOnChanged();
+
             }
             else
             {
                 _toast.ShowInfo(await response.Content.ReadAsStringAsync());
             }
+        }
+
+        private void RaiseOnChanged()
+        {
+            OnChanged?.Invoke();
         }
     }
 }
