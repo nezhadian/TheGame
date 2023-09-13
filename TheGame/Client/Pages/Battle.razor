@@ -84,7 +84,7 @@
         <div class="d-flex flex-column align-items-center">
 
             <!--Avatar-->
-            <div class="rounded-circle text-white text-center" style="width:10rem;height:10rem"></div>
+            <div class="rounded-circle text-white text-center @(GetAvatarColor(BattleInfoService.CurrentBattle.IsAttackerWinner))" style="width:10rem;height:10rem"></div>
 
             <!--Username-->
             <h4 class="mt-3">@BattleInfoService.CurrentBattle.AttackerName</h4>
@@ -109,7 +109,7 @@
         <!--Opponent-->
         <div class="d-flex flex-column align-items-center">
             <!--Avatar-->
-            <div class="rounded-circle bg-light text-white text-center" style="width:10rem;height:10rem"></div>
+            <div class="rounded-circle text-white text-center @(GetAvatarColor(!BattleInfoService.CurrentBattle.IsAttackerWinner))" style="width:10rem;height:10rem"></div>
 
             <!--Username-->
             <h4 class="mt-3">@BattleInfoService.CurrentBattle.OpponentName</h4>
@@ -244,6 +244,16 @@
     {
         var unit = UserUnitService.Units.FirstOrDefault(u => u.Id == unitId);
         return $"images/{unit.Title}.jpeg";
+    }
+
+    public string GetAvatarColor(bool? opponentState)
+    {
+        switch (opponentState)
+        {
+            case true: return "bg-success";
+            case false: return "bg-danger";
+            case null: return "bg-null";
+        }
     }
 
     public async Task Attack()
