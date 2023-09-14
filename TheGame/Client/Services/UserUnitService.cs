@@ -23,6 +23,23 @@ namespace TheGame.Client.Services
         public IList<Unit> Units { get; set; } = new List<Unit>();
         public IList<UserUnit> UserUnits { get; set; } = new List<UserUnit>();
 
+        private IList<UserUnit> currentUnits = null;
+        private int currentUnitId = -1;
+        public IList<UserUnit> GetCurrentUnits(int unitId)
+        {
+            if (currentUnitId == unitId && currentUnits != null)
+                return currentUnits;
+
+            currentUnits = UserUnits
+                .Where(u => u.UnitId == unitId)
+                .OrderByDescending(u => u.HitPoint)
+                .ToList();
+
+            currentUnitId = unitId;
+            return currentUnits;
+        }
+
+
         public async Task GetUnitsAsync()
         {
             Units = await _http.GetFromJsonAsync<IList<Unit>>("api/unit/getall");

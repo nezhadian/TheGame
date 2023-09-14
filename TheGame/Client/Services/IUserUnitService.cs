@@ -14,5 +14,7 @@ namespace TheGame.Client.Services
         Task GetUnitsAsync();
         Task GetUserUnitsAsync();
         Task ReviveAllUnitsAsync();
+
+        IList<UserUnit> GetCurrentUnits(int unitId);
     }
 }
