@@ -16,7 +16,7 @@
         position: relative;
         background-color: var(--attack);
         height: 2rem;
-        width: 10rem;
+        width: 60%;
         color: #555;
         animation: arrow-attack-anim 2s linear infinite;
     }
@@ -45,7 +45,7 @@
         position: relative;
         background-color: var(--defence);
         height: 2rem;
-        width: 10rem;
+        width: 60%;
         color: #555;
         align-self: flex-end;
         animation: arrow-defence-anim 2s linear infinite;
@@ -70,9 +70,20 @@
     }
 
     .align-x-center {
-        left: 2rem;
-        top: 2rem;
+        position:relative;
+        text-align:center;
     }
+        .align-x-center > img {
+            width: 100%;
+            height: auto;
+        }
+        .align-x-center > span {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
 </style>
 
 @if (BattleInfoService.CurrentBattle != null)
@@ -148,63 +159,57 @@
 
     <div class="row w-75 mx-auto my-1">
                 <!--Attacker Avatar-->
-                <div class="col-3">
-                    @if (item.IsDefence && item.IsDead)
-                    {
-                        <div class="position-relative">
-                            <img class="w-100 float-left " src="@GetImagePath(item.AttackerUnitId)" />
-                            <div class="w-100 float-left position-absolute align-x-center">
-                                <span class="oi oi-x text-danger h1"></span>
-                            </div>
-                        </div>
-                    }
-                    else
-                    {
-                        <img class="w-100" src="@GetImagePath(item.AttackerUnitId)" />
-                    }
-
-
-                </div>
-
-                <!--Damage-->
-                <div class="col-6">
-                    @if (item.IsDefence)
-                    {
-                        <div class="w-100 h-100 d-flex flex-column justify-content-center">
-                            <div class="arrow-defence">
-                                <div class="py-1 w-100 text-center text-white">@item.Damage</div>
-                            </div>
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="w-100 h-100 d-flex flex-column justify-content-center">
-                            <div class="arrow-attack">
-                                <div class="py-1 w-100 text-center text-white">@item.Damage</div>
-                            </div>
-                        </div>
-
-                    }
-                </div>
-
-                <!--Opponent Avatar-->
-                <div class="col-3">
-                    @if (!item.IsDefence && item.IsDead)
-                    {
-                        <div class="position-relative">
-                            <img class="w-100 float-left " src="@GetImagePath(item.OpponentUnitId)" />
-                            <div class="w-100 float-left position-absolute align-x-center">
-                                <span class="oi oi-x text-danger h1"></span>
-                            </div>
-                        </div>
-                    }
-                    else
-                    {
-                        <img class="w-100" src="@GetImagePath(item.OpponentUnitId)" />
-                    }
-                </div>
-
+        <div class="col-3">
+                @if (item.IsDefence && item.IsDead)
+                {
+            <div class="align-x-center">
+                <img src="@GetImagePath(item.AttackerUnitId)" />
+                <span class="oi oi-x text-danger h3"></span>
             </div>
+                }
+                else
+                {
+                    <img class="w-100" src="@GetImagePath(item.AttackerUnitId)" />
+                }
+            </div>
+
+            <!--Damage-->
+            <div class="col-6">
+                @if (item.IsDefence)
+                {
+                    <div class="w-100 h-100 d-flex flex-column justify-content-center">
+                        <div class="arrow-defence">
+                            <div class="py-1 w-100 text-center text-white">@item.Damage</div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="w-100 h-100 d-flex flex-column justify-content-center">
+                        <div class="arrow-attack">
+                            <div class="py-1 w-100 text-center text-white">@item.Damage</div>
+                        </div>
+                    </div>
+
+                }
+            </div>
+
+            <!--Opponent Avatar-->
+            <div class="col-3">
+                @if (!item.IsDefence && item.IsDead)
+                {
+                    <div class="align-x-center">
+                        <img src="@GetImagePath(item.OpponentUnitId)" />
+                        <span class="oi oi-x text-danger h3"></span>
+                    </div>
+                }
+                else
+                {
+                    <img class="w-100" src="@GetImagePath(item.OpponentUnitId)" />
+                }
+            </div>
+
+        </div>
         }
     </div>
 
