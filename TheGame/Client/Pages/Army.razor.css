@@ -1,8 +1,0 @@
-﻿.card-transform-left {
-
-    -moz-transform: translateX(-90%);
-    -ms-transform: translateX(-90%);
-    -o-transform: translateX(-90%);
-    -webkit-transform: translateX(-90%);
-    transform: translateX(-90%);
-}
