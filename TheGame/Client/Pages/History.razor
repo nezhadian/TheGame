@@ -2,6 +2,7 @@
 @inject IBattleService BattleService;
 @inject IToastService ToastService;
 @inject IUserService UserService;
+@inject IShopService ShopService; 
 @attribute [Authorize]
 
 @if (BattleService.IsUserInBattle)
@@ -59,9 +60,10 @@ else
         await UserService.GetHistoryAsync();
     }
 
-    public void BattleCompleted()
+    public async Task BattleCompleted()
     {
         StateHasChanged();
+        await ShopService.GetCostsAsync();
     }
 
     public void OnItemSelect(int battleId)
