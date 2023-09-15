@@ -30,7 +30,8 @@ namespace TheGame.Server.Controllers
         public async Task<IActionResult> GetLeaderboard()
         {
             var users = await _context.Users
-                .OrderByDescending(u => u.Victories)
+                .OrderByDescending(u => u.TotalDamage)
+                .ThenByDescending(u => u.Victories)
                 .ThenBy(u => u.Defeats)
                 .ThenByDescending(u => u.Id)
                 .ToListAsync();
@@ -44,7 +45,8 @@ namespace TheGame.Server.Controllers
                     Username = u.Username,
                     Battles = u.Battles,
                     Victories = u.Victories,
-                    Defeats = u.Defeats
+                    Defeats = u.Defeats,
+                    TotalDamage = u.TotalDamage
                 }
             );
 
@@ -70,5 +72,6 @@ namespace TheGame.Server.Controllers
 
             return Ok(history);
         }
+
     }
 }

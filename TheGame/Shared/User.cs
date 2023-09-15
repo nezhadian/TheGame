@@ -21,5 +21,7 @@ namespace TheGame.Shared
         public int Battles { get; set; }
         public int Victories { get; set; }
         public int Defeats { get; set; }
+
+        public int TotalDamage { get; set; }
     }
 }

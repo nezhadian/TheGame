@@ -17,6 +17,7 @@ namespace TheGame.Shared
         public int Victories { get; set; }
         public int Defeats { get; set; }
 
+        public int TotalDamage { get; set; }
 
     }
 }

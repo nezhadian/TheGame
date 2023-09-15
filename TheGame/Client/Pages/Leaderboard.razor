@@ -29,6 +29,7 @@ else
                 <th>Battles</th>
                 <th>Victories</th>
                 <th>Defeats</th>
+                <th>Damage</th>
                 <th></th>
             </tr>
         </thead>
@@ -42,6 +43,7 @@ else
                 <td>@user.Battles</td>
                 <td>@user.Victories</td>
                 <td>@user.Defeats</td>
+                <td>@user.TotalDamage</td>
                 <td>
                     @if (user.UserId != MyUserId)
                     {
@@ -49,7 +51,7 @@ else
                     }
                     else
                     {
-                        
+
                         <a href="history" class="btn w-100 btn-link font-weight-normal">
                             View
                         </a>

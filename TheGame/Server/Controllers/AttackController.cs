@@ -87,6 +87,8 @@ namespace TheGame.Server.Controllers
 
             battle.Attacker.Battles++;
             battle.Opponent.Battles++;
+            battle.Attacker.TotalDamage += battle.OpponentDamage;
+            battle.Opponent.TotalDamage += battle.AttackerDamage;
 
             var minCost = 1000;
 
