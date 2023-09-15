@@ -56,18 +56,27 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        await BattleService.GetCurrentBattleId();
-        await UserService.GetHistoryAsync();
+        await LoadHistoryAsync();
     }
 
     public async Task BattleCompleted()
     {
         StateHasChanged();
         await ShopService.GetCostsAsync();
+        await LoadHistoryAsync();
+
     }
 
     public void OnItemSelect(int battleId)
     {
         SelectedBattleId = battleId;
+    }
+
+    public async Task LoadHistoryAsync()
+    {
+        await BattleService.GetCurrentBattleId();
+        await UserService.GetHistoryAsync();
+        if (SelectedBattleId == 0 && UserService.History?.Count >= 1)
+            SelectedBattleId = UserService.History[0].BattleId;
     }
 }
