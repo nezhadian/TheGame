@@ -88,6 +88,8 @@ namespace TheGame.Server.Controllers
             battle.Attacker.Battles++;
             battle.Opponent.Battles++;
 
+            var minCost = 1000;
+
             if (isAttackerWinner)
             {
                 battle.Attacker.Victories++;
@@ -95,7 +97,7 @@ namespace TheGame.Server.Controllers
 
                 battle.WinnerId = battle.AttackerId;
                 battle.Attacker.TotalCosts += battle.OpponentDamage;
-                battle.Opponent.TotalCosts += battle.AttackerDamage * 10;
+                battle.Opponent.TotalCosts = Math.Max(minCost, battle.Opponent.TotalCosts + battle.OpponentDamage);
             }
             else
             {
@@ -104,10 +106,11 @@ namespace TheGame.Server.Controllers
 
                 battle.WinnerId = battle.OpponentId;
                 battle.Opponent.TotalCosts += battle.AttackerDamage;
-                battle.Attacker.TotalCosts += battle.OpponentDamage * 10;
+                battle.Attacker.TotalCosts = Math.Max(minCost, battle.Attacker.TotalCosts + battle.AttackerDamage);
             }
 
-            battle.IsCompleted = true;        }
+            battle.IsCompleted = true;        
+        }
         private int FightRound(IList<UserUnit> attackerArmy, IList<UserUnit> opponentArmy, Battle battle, int round, List<Attack> attacks)
         {
             var rnd = new Random();
