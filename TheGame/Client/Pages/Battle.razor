@@ -222,6 +222,8 @@
     {
         get { return _battleId; }
         set {
+            if (value == _battleId || value < 1)
+                return;
 
             _battleId = value;
             BattleInfoService.GetBattleInfo(value);
