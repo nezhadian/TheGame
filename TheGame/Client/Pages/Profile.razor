@@ -1,44 +1,69 @@
 ﻿@page "/profile"
+@inject IUserService UserService;
 @inject ILocalStorageService StorageService;
 @inject AuthenticationStateProvider AuthService;
 @inject NavigationManager NavigationService;
 @attribute [Authorize]
 
 
-<table class="table mt-3">
+<table class="table table-hover">
     <tbody>
         <tr>
-            <td>Id</td>
-            <td>@Id</td>
-        </tr>
-
-        <tr>
             <td>Username</td>
-            <td>@Name</td>
+            <td>@info.Username</td>
         </tr>
 
         <tr>
             <td>Email</td>
-            <td>@Email</td>
+            <td>@info.Email</td>
+        </tr>
+
+        <tr>
+            <td>Password</td>
+            <td><button class="btn btn-warning px-3 py-1">Change Password</button></td>
+        </tr>
+
+        <tr>
+            <td>Costs</td>
+            <td>@info.TotalCosts</td>
+        </tr>
+
+        <tr>
+            <td>Battles</td>
+            <td>
+                @info.Battles
+                <a class="btn btn-link" href="history">View History</a>
+            </td>
+        </tr>
+        <tr>
+            <td>Victories</td>
+            <td>@info.Victories</td>
+        </tr>
+        <tr>
+            <td>Defeats</td>
+            <td>@info.Defeats</td>
+        </tr>
+        <tr>
+            <td>Total Damage</td>
+            <td>@info.TotalDamage</td>
+        </tr>
+        <tr>
+            <td>Logout</td>
+            <td><button class="btn btn-danger" @onclick="Logout">Logout</button></td>
         </tr>
     </tbody>
 </table>
 
-<button class="mt-2 btn btn-danger" @onclick="Logout">Logout</button>
+
 
 @code {
 
-    public string Id { get; set; }
-    public string Name { get; set; }
-    public string Email { get; set; }
+    public UserInfo info { get; set; } = new UserInfo();
 
 
     protected override async Task OnInitializedAsync()
     {
-        var auth = await AuthService.GetAuthenticationStateAsync();
-        Id = auth.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier).Value.ToString();
-        Name = auth.User.FindFirst(System.Security.Claims.ClaimTypes.Name).Value.ToString();
-        Email = auth.User.FindFirst(System.Security.Claims.ClaimTypes.Email).Value.ToString();
+        info = await UserService.GetUserInfo();
 
     }
 

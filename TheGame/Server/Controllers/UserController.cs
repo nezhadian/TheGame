@@ -74,5 +74,20 @@ namespace TheGame.Server.Controllers
             return Ok(history);
         }
 
+        [HttpGet("info")]
+        public async Task<IActionResult> GetUserInfo()
+        {
+            var user = await _utility.GetUser();
+            return Ok(new UserInfo
+            {
+                Email = user.Email,
+                Username = user.Username,
+                TotalCosts = user.TotalCosts,
+                Battles = user.Battles,
+                Victories = user.Victories,
+                Defeats = user.Defeats,
+                TotalDamage = user.TotalDamage
+            });
+        }
     }
 }

@@ -31,5 +31,11 @@ namespace TheGame.Client.Services
             var response = await _http.GetFromJsonAsync<IList<BattleHistoryEntry>>("api/user/history");
             History = response;
         }
+
+        public async Task<UserInfo> GetUserInfo()
+        {
+            var response = await _http.GetFromJsonAsync<UserInfo>("api/user/info");
+            return response;
+        }
     }
 }

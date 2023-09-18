@@ -13,5 +13,6 @@ namespace TheGame.Client.Services
 
         Task GetLeaderboardAsync();
         Task GetHistoryAsync();
+        Task<UserInfo> GetUserInfo();
     }
 }
