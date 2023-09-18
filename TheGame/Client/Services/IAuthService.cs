@@ -10,5 +10,6 @@ namespace TheGame.Client.Services
     {
         Task<ServiceResponse<string>> Login(LoginData data);
         Task<ServiceResponse<int>> Register(RegisterData data);
+        Task Logout();
     }
 }

@@ -1,11 +1,8 @@
 ﻿@page "/profile"
 @inject IUserService UserService;
-@inject ILocalStorageService StorageService;
-@inject AuthenticationStateProvider AuthService;
-@inject NavigationManager NavigationService;
+@inject IAuthService AuthService;
+
 @attribute [Authorize]
-
-
 <table class="table table-hover">
     <tbody>
         <tr>
@@ -73,9 +70,7 @@
 
     public async Task Logout()
     {
-        await StorageService.RemoveItemAsync("token");
-        await AuthService.GetAuthenticationStateAsync();
-        NavigationService.NavigateTo("");
+        await AuthService.Logout();
     }
 
 }
