@@ -11,6 +11,8 @@ namespace TheGame.Client.Services
         public int CurrentBattleId { get; set; }
         public bool IsUserInBattle { get; set; }
 
+        public event Action OnChanged;
+
         Task GetCurrentBattleId();
         Task StartBattleAsync(int opponentId);
 

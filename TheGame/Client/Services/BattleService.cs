@@ -24,6 +24,8 @@ namespace TheGame.Client.Services
         }
 
         public BattleProgress CurrentBattle { get; set; }
+        public event Action OnChanged;
+
 
         public int CurrentBattleId { get; set; }
         public bool IsUserInBattle { get; set; }
@@ -34,6 +36,7 @@ namespace TheGame.Client.Services
 
             CurrentBattleId = response;
             IsUserInBattle = response != -1;
+            RaiseBattleChanged();
         }
 
         public async Task StartBattleAsync(int opponentId)
@@ -43,13 +46,18 @@ namespace TheGame.Client.Services
             {
                 _toast.ShowSuccess($"Battle Started with {await response.Content.ReadAsStringAsync()}");
                 _navigation.NavigateTo("/history");
-                await GetCurrentBattleId();
             }
             else
             {
                 _toast.ShowInfo(await response.Content.ReadAsStringAsync());
-                await GetCurrentBattleId();
             }
+            await GetCurrentBattleId();
+
+        }
+
+        public void RaiseBattleChanged()
+        {
+            OnChanged?.Invoke();
         }
     }
 }

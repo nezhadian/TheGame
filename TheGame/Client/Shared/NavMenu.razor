@@ -1,5 +1,24 @@
 ﻿@inject IShopService ShopService;
-<nav class="navbar navbar-light bg-white">
+@inject IBattleService BattleService;
+
+<style>
+    .highlight-history {
+        background-image: repeating-linear-gradient(46deg, #f0d7ff 0, #f3e9ff 50%, #f0d7ff 100%);
+        animation: background-anim 1s linear infinite;
+        color: #fff;
+    }
+    @@keyframes background-anim{
+        100%{
+            background-position-x:100vw;
+        }
+    }
+    .text-battle {
+        color: #7a26db!important;
+        font-weight:bold;
+    }
+</style>
+
+<nav class="navbar navbar-light bg-white @(BattleService.IsUserInBattle ? "highlight-history" : "")">
     <div class="container">
         <Microsoft.AspNetCore.Components.Authorization.AuthorizeView>
             <NotAuthorized>
@@ -37,7 +56,16 @@
                                 </li>
 
                                 <li class="nav-item">
-                                    <NavLink class="nav-link" href="history">History</NavLink>
+                                    @if (BattleService.IsUserInBattle)
+                                    {
+                                        <NavLink class="nav-link text-battle" href="history">History</NavLink>
+
+                                    }
+                                    else
+                                    {
+                                        <NavLink class="nav-link" href="history">History</NavLink>
+
+                                    }
                                 </li>
 
                                 <li class="nav-item">
@@ -61,7 +89,7 @@
                                 <NavLink class="nav-link" href="" Match="NavLinkMatch.All">Home</NavLink>
                             </li>
 
-                            <li class="nav-item">
+                            <li class="nav-item highlight-history">
                                 <NavLink class="nav-link" href="history">History</NavLink>
                             </li>
 
@@ -86,5 +114,6 @@
     protected override void OnInitialized()
     {
         ShopService.OnChanged += StateHasChanged;
+        BattleService.OnChanged += StateHasChanged;
     }
 }
