@@ -9,6 +9,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using TheGame.Server.Services;
 using TheGame.Shared;
 
 namespace TheGame.Server.Data
@@ -17,11 +18,13 @@ namespace TheGame.Server.Data
     {
         readonly DataContext _context;
         readonly IConfiguration _configuration;
+        readonly IUtilityService _utility;
 
-        public AuthRepository(DataContext context, IConfiguration configuration)
+        public AuthRepository(DataContext context, IConfiguration configuration, IUtilityService utility)
         {
             _context = context;
             _configuration = configuration;
+            _utility = utility;
         }
 
         //
@@ -40,7 +43,7 @@ namespace TheGame.Server.Data
                     Message = "this user is not exists"
                 };
 
-            }else if (!IsCorrectPassword(user.PasswordHash, user.PasswordSalt, password))
+            }else if (!_utility.VerifyPasswordHash(user.PasswordHash, user.PasswordSalt, password))
             {
                 return new ServiceResponse<string>
                 {
@@ -83,25 +86,10 @@ namespace TheGame.Server.Data
                 
         }
 
-        private bool IsCorrectPassword(byte[] passwordHash, byte[] passwordSalt, string password)
-        {
-            using (var hmac = new HMACSHA512(passwordSalt))
-            {
-                byte[] hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-
-                for (int i = 0; i < hash.Length; i++)
-                {
-                    if (hash[i] != passwordHash[i])
-                        return false;
-                }
-                return true;
-            }
-        }
-
         //
         public async Task<ServiceResponse<int>> Register(User user, string password)
         {
-            var passwordHash = GenerateHash(password);
+            var passwordHash = _utility.GeneratePasswordHash(password);
             user.PasswordHash = passwordHash.hash;
             user.PasswordSalt = passwordHash.salt;
 
@@ -113,14 +101,6 @@ namespace TheGame.Server.Data
                 Data = user.Id,
                 IsSuccess = true,
             };
-        }
-        public (byte[] hash,byte[] salt) GenerateHash(string password)
-        {
-            using(var hmac = new HMACSHA512())
-            {
-                var hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-                return (hash, hmac.Key);
-            }
         }
 
         //
@@ -135,5 +115,6 @@ namespace TheGame.Server.Data
 
             return user != null;
         }
+
     }
 }

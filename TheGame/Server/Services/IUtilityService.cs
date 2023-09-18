@@ -15,6 +15,10 @@ namespace TheGame.Server.Services
         Task<bool> IsUserInBattle();
 
         Task<bool> IsInBattle(int userId);
-        
+
+        bool VerifyPasswordHash(byte[] passwordHash, byte[] passwordSalt, string password);
+        (byte[] hash, byte[] salt) GeneratePasswordHash(string password);
+
+
     }
 }
