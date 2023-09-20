@@ -8,6 +8,7 @@ namespace TheGame.Client.Services
 {
     public interface IAttackService
     {
+        public bool KeepAttacks { get; set; }
         public IList<AttackResault> Attacks { get; set; }
         public event Action OnChanged;
 

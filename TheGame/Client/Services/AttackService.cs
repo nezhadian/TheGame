@@ -22,6 +22,7 @@ namespace TheGame.Client.Services
         }
 
         public IList<AttackResault> Attacks { get; set; } = new List<AttackResault>();
+        public bool KeepAttacks { get; set; }
         public event Action OnChanged;
 
         public async Task<bool> Attack()
@@ -30,10 +31,20 @@ namespace TheGame.Client.Services
 
             if (response.IsSuccess)
             {
-                Attacks = response.Data.Attacks
+                if (KeepAttacks)
+                {
+                    Attacks = response.Data.Attacks
                     .Concat(Attacks)
                     .OrderByDescending(u => u.Round)
                     .ToList();
+                }
+                else
+                {
+                    Attacks = response.Data.Attacks
+                        .OrderByDescending(u => u.Round)
+                        .ToList(); ;
+                }
+                
 
                 RaiseOnChanged();
                 return response.Data.IsCompleted;

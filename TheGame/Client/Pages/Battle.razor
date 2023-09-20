@@ -234,6 +234,7 @@
 
             _battleId = value;
             BattleInfoService.GetBattleInfo(value);
+            AttackService.KeepAttacks = false;
             AttackService.GetLog(value);
         }
     }
@@ -290,6 +291,7 @@
 
     public async Task SeeMoreResault()
     {
+        AttackService.KeepAttacks = true;
         await AttackService.GetMoreLog(BattleId);
     }
 }
