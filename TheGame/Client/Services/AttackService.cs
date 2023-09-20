@@ -47,18 +47,22 @@ namespace TheGame.Client.Services
 
         public async Task GetLog(int battleId)
         {
-            var response = await _http.PostAsJsonAsync("api/attack/log",battleId);
+            var response = await _http.GetFromJsonAsync<IList<AttackResault>>
+                ($"api/attack/log/{battleId}");
 
-            if (response.IsSuccessStatusCode)
-            {
-                Attacks = await response.Content.ReadFromJsonAsync<IList<AttackResault>>();
-                RaiseOnChanged();
 
-            }
-            else
-            {
-                _toast.ShowInfo(await response.Content.ReadAsStringAsync());
-            }
+            Attacks = response;
+            RaiseOnChanged();
+        }
+
+        public async Task GetMoreLog(int battleId)
+        {
+            var response = await _http.GetFromJsonAsync<IList<AttackResault>>
+                ($"api/attack/more/{battleId}/{Attacks.Count}");
+
+            
+            Attacks = Attacks.Concat(response).ToList();
+            RaiseOnChanged();
         }
 
         private void RaiseOnChanged()

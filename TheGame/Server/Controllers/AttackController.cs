@@ -17,6 +17,7 @@ namespace TheGame.Server.Controllers
     [Authorize]
     public class AttackController : ControllerBase
     {
+        const int LogSize = 10;
         private readonly DataContext _context;
         private readonly IUtilityService _utility;
 
@@ -185,8 +186,8 @@ namespace TheGame.Server.Controllers
         }
 
 
-        [HttpPost("log")]
-        public async Task<IActionResult> GetLog([FromBody] int battleId)
+        [HttpGet("log/{battleId}")]
+        public async Task<IActionResult> GetLog(int battleId)
         {
             var user = await _utility.GetUser();
             var attacks = await _context.Attacks
@@ -196,9 +197,32 @@ namespace TheGame.Server.Controllers
                         .Include(a => a.AttackerUnit)
                         .Include(a => a.OpponentUnit)
                         .OrderByDescending(a => a.Round)
+                        .Take(LogSize)
                         .ToListAsync();
 
             IEnumerable<AttackResault> attacksResault = AttackToAttackResault(user, attacks);
+
+
+            return Ok(attacksResault);
+        }
+
+        [HttpGet("more/{battleId}/{offset}")]
+        public async Task<IActionResult> GetMore(int battleId,int offset)
+        {
+            var user = await _utility.GetUser();
+            var attacks = await _context.Attacks
+                        .Where(a => a.BattleId == battleId)
+                        .Include(a => a.Battle)
+                        .Where(a => a.Battle.AttackerId == user.Id || a.Battle.OpponentId == user.Id)
+                        .Include(a => a.AttackerUnit)
+                        .Include(a => a.OpponentUnit)
+                        .OrderByDescending(a => a.Round)
+                        .Skip(offset)
+                        .Take(LogSize)
+                        .ToListAsync();
+
+            IEnumerable<AttackResault> attacksResault = AttackToAttackResault(user, attacks);
+
 
             return Ok(attacksResault);
         }

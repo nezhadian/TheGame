@@ -13,6 +13,7 @@ namespace TheGame.Client.Services
 
         Task<bool> Attack();
         Task GetLog(int battleId);
+        Task GetMoreLog(int battleId);
 
     }
 }
